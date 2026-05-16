@@ -9,7 +9,7 @@ import json
 import sys
 from typing import Sequence
 
-from . import __version__, cron, scheduler, theme
+from . import __version__, cron, log_writer, scheduler, theme
 from .model import Task
 from .sources import github_ci, runpod
 from .store import Store
@@ -58,6 +58,15 @@ def cmd_add(args: argparse.Namespace) -> int:
     )
     tasks.append(task)
     store.save_tasks(tasks)
+    log_writer.log(
+        "add",
+        task_id=task.id,
+        subject=task.subject,
+        base_score=task.base_score,
+        tags=task.tags,
+        deadline=task.deadline,
+        blocked_by=task.blocked_by,
+    )
     print(task.id)
     return 0
 
@@ -106,6 +115,16 @@ def cmd_list(args: argparse.Namespace) -> int:
         ]
         print(json.dumps(out, indent=2))
         return 0
+    log_writer.log(
+        "list",
+        count=len(ranked),
+        top=[
+            {"id": s.task.id, "subject": s.task.subject, "priority": s.priority}
+            for s in ranked[:3]
+        ],
+        warnings=warnings,
+    )
+
     if not ranked:
         print(theme.paint("(no tasks)", t.dim, enabled=color))
         return 0
@@ -184,6 +203,17 @@ def cmd_tick(args: argparse.Namespace) -> int:
     t, color = _theme(args)
     _print_warnings(t, enabled=color, warnings=warnings)
 
+    log_writer.log(
+        "tick",
+        emitted_cron_signals=emitted,
+        ranked_count=len(ranked),
+        top=[
+            {"id": s.task.id, "subject": s.task.subject, "priority": s.priority}
+            for s in ranked[:3]
+        ],
+        warnings=warnings,
+    )
+
     _print_banner(t, enabled=color, title=f"T R I A G E   T I C K   v{__version__}")
     summary = (
         f"emitted {emitted} cron signal(s); ranked {len(ranked)} task(s)"
@@ -204,6 +234,7 @@ def cmd_poll(args: argparse.Namespace) -> int:
         print(theme.paint(msg, t.warning, enabled=color), file=sys.stderr)
         return 1
     emitted, warnings = poller(store)
+    log_writer.log("poll", source=args.source, emitted=emitted, warnings=warnings)
     _print_warnings(t, enabled=color, warnings=warnings)
     print(
         theme.paint(
@@ -228,6 +259,7 @@ def cmd_rm(args: argparse.Namespace) -> int:
         )
         return 1
     store.save_tasks(tasks)
+    log_writer.log("rm", task_id=args.id)
     print(theme.paint(f"removed {args.id}", t.success, enabled=color))
     return 0
 
@@ -299,6 +331,20 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Force-disable ANSI color even on a TTY.",
     )
+    p.add_argument(
+        "--log-file",
+        default=None,
+        help=(
+            "Append JSONL events to this path "
+            f"(default: $TRIAGE_LOG_FILE or {log_writer.DEFAULT_LOG_PATH}; "
+            f"falls back to {log_writer.FALLBACK_LOG_PATH} if unwritable)."
+        ),
+    )
+    p.add_argument(
+        "--no-log",
+        action="store_true",
+        help="Disable JSONL event logging for this invocation.",
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
 
     a = sub.add_parser("add", help="Add a task.")
@@ -357,6 +403,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    log_writer.configure(path=getattr(args, "log_file", None), disabled=getattr(args, "no_log", False))
     return args.func(args)
 
 

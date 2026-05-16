@@ -124,6 +124,44 @@ triage poll github-ci           # invoke a network-bound signal source
 loop, or Claude Code's `ScheduleWakeup`. `poll` is for signal sources
 that hit the network (you pay for those explicitly).
 
+### Event log (for external agents)
+
+Every CLI invocation appends a single JSON line to a log file so an
+external agent can `tail -f` and parse Triage's behavior:
+
+```bash
+tail -f /var/log/triage.log | jq .   # if the file is owned by your user
+```
+
+Sample entries:
+
+```json
+{"ts":"2026-05-16T06:16:18+00:00","event":"add","task_id":"9e8040d267d9","subject":"Investigate slow query","base_score":10,"tags":[],"deadline":null,"blocked_by":[]}
+{"ts":"2026-05-16T06:16:18+00:00","event":"tick","ranked_count":2,"emitted_cron_signals":0,"top":[{"id":"ad2006db3c12","priority":35,"subject":"Rotate cert"},...],"warnings":[]}
+{"ts":"2026-05-16T06:16:19+00:00","event":"poll","source":"github-ci","emitted":1,"warnings":[]}
+{"ts":"2026-05-16T06:16:20+00:00","event":"rm","task_id":"9e8040d267d9"}
+```
+
+Configuration:
+
+| Mechanism                  | What it does                                                     |
+|----------------------------|------------------------------------------------------------------|
+| `--log-file PATH` flag     | Per-invocation log path.                                         |
+| `TRIAGE_LOG_FILE=PATH` env | Per-shell log path.                                              |
+| Default                    | `/var/log/triage.log`. Falls back to `~/.triage/triage.log` if `/var/log` isn't writable (warns once on stderr). |
+| `--no-log` flag            | Disable logging for this invocation.                             |
+| `TRIAGE_NO_LOG=1` env      | Disable logging globally for the shell.                          |
+
+To use the standard `/var/log` path without sudo on every call:
+
+```bash
+sudo touch /var/log/triage.log
+sudo chown $(id -un):$(id -gn) /var/log/triage.log
+```
+
+Logging is a strict one-way side channel — errors during write are
+swallowed so the CLI's primary behavior is never disrupted.
+
 ### Themes
 
 ```bash
@@ -170,10 +208,11 @@ primitive.
 | v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
 | v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
 | v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
-| v0.5    | `runpod-cost` signal source + drain-idle-pods rule            | planned  |
-| v0.6    | `github-pr` stale-PR signal source                            | planned  |
-| v0.7    | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
-| v0.8    | `triage watch` long-running mode + systemd unit               | planned  |
+| v0.5    | `runpod-cost` signal source + `cost_pressure` rule            | shipped  |
+| v0.6    | JSONL event log writer for external agents                    | shipped  |
+| v0.7    | `github-pr` stale-PR signal source                            | planned  |
+| v0.8    | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
+| v0.9    | `triage watch` long-running mode + systemd unit               | planned  |
 
 ---
 
