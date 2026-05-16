@@ -15,11 +15,17 @@ roadmap is on the README's "Status" table.
 """
 
 from . import en   # English (baseline)
+from . import de   # German
 from . import es   # Spanish
 from . import fr   # French
+from . import it   # Italian
+from . import pt   # Portuguese
 
 LOCALES: dict[str, dict[str, str]] = {
+    "de": de.STRINGS,
     "en": en.STRINGS,
     "es": es.STRINGS,
     "fr": fr.STRINGS,
+    "it": it.STRINGS,
+    "pt": pt.STRINGS,
 }
