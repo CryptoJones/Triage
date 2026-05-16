@@ -309,6 +309,95 @@ def cmd_rm(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_status(args: argparse.Namespace) -> int:
+    """One-screen at-a-glance: top-3 tasks, tag counts, signal counts."""
+    from collections import Counter
+
+    store = _store_from_args(args)
+    cron.emit(store)
+    tasks = store.load_tasks()
+    signals = store.active_signals()
+    ranked, warnings = scheduler.rank_with_warnings(tasks, signals)
+
+    t, color = _theme(args)
+    _print_warnings(t, enabled=color, warnings=warnings)
+
+    tag_counts = Counter()
+    for task in tasks:
+        for tag in task.tags:
+            tag_counts[tag] += 1
+
+    signal_counts = Counter()
+    for sig in signals:
+        signal_counts[sig.source] += 1
+
+    log_writer.log(
+        "status",
+        task_count=len(tasks),
+        ranked_count=len(ranked),
+        tag_counts=dict(tag_counts),
+        signal_counts=dict(signal_counts),
+        top=[
+            {"id": s.task.id, "subject": s.task.subject, "priority": s.priority}
+            for s in ranked[:3]
+        ],
+        warnings=warnings,
+    )
+
+    if args.json:
+        print(json.dumps({
+            "task_count": len(tasks),
+            "tag_counts": dict(tag_counts),
+            "signal_counts": dict(signal_counts),
+            "top": [
+                {"id": s.task.id, "subject": s.task.subject, "priority": s.priority}
+                for s in ranked[:3]
+            ],
+            "warnings": warnings,
+        }, indent=2, sort_keys=True))
+        return 0
+
+    _print_banner(t, enabled=color, title=f"T R I A G E   S T A T U S")
+
+    print(theme.paint("  TOP 3", t.header, enabled=color))
+    print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
+    if not ranked:
+        print(theme.paint("    (no tasks)", t.dim, enabled=color))
+    else:
+        for s in ranked[:3]:
+            print(_format_row(t, enabled=color, s=s))
+
+    print()
+    print(theme.paint(f"  TAGS ({len(tag_counts)})", t.header, enabled=color))
+    print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
+    if not tag_counts:
+        print(theme.paint("    (no tags)", t.dim, enabled=color))
+    else:
+        for tag, n in sorted(tag_counts.items(), key=lambda kv: (-kv[1], kv[0])):
+            count_part = theme.paint(f"{n:>3}", t.priority_mid, enabled=color)
+            tag_part = theme.paint(tag, t.subject, enabled=color)
+            print(f"    {count_part}  {tag_part}")
+
+    print()
+    print(theme.paint(f"  ACTIVE SIGNALS ({sum(signal_counts.values())})", t.header, enabled=color))
+    print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
+    if not signal_counts:
+        print(theme.paint("    (no active signals)", t.dim, enabled=color))
+    else:
+        for source, n in sorted(signal_counts.items(), key=lambda kv: (-kv[1], kv[0])):
+            count_part = theme.paint(f"{n:>3}", t.priority_mid, enabled=color)
+            source_part = theme.paint(source, t.subject, enabled=color)
+            print(f"    {count_part}  {source_part}")
+
+    print()
+    print(theme.paint(
+        f"  total tasks: {len(tasks)}    ranked: {len(ranked)}",
+        t.dim,
+        enabled=color,
+    ))
+    return 0
+
+
 def cmd_theme(args: argparse.Namespace) -> int:
     """List available themes (or preview one if --name given)."""
     if args.name:
@@ -477,6 +566,13 @@ def build_parser() -> argparse.ArgumentParser:
     rm = sub.add_parser("rm", help="Remove a task by id.")
     rm.add_argument("id")
     rm.set_defaults(func=cmd_rm)
+
+    st = sub.add_parser(
+        "status",
+        help="One-screen at-a-glance: top-3 tasks, tag counts, signal counts.",
+    )
+    st.add_argument("--json", action="store_true", help="Emit JSON instead of human-readable.")
+    st.set_defaults(func=cmd_status)
 
     th = sub.add_parser("theme", help="List themes, or preview one with --name.")
     th.add_argument(
