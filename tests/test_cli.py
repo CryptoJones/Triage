@@ -87,3 +87,45 @@ def test_tick_prints_count(home, capsys):
     assert main(["tick"]) == 0
     out = capsys.readouterr().out
     assert "ranked 1 task" in out
+
+
+def test_blocker_bumps_blocker_above_blocked(home, capsys):
+    main(["add", "blocker", "--base-score", "1"])
+    blocker_id = capsys.readouterr().out.strip()
+
+    main(["add", "blocked", "--base-score", "100", "--blocked-by", blocker_id])
+    blocked_id = capsys.readouterr().out.strip()
+
+    main(["list"])
+    out = capsys.readouterr().out
+    # blocker should appear FIRST (higher priority) even though base_score=1
+    assert out.index(blocker_id) < out.index(blocked_id)
+
+
+def test_why_surfaces_blocker_transitive_contribution(home, capsys):
+    main(["add", "blocker", "--base-score", "1"])
+    blocker_id = capsys.readouterr().out.strip()
+    main(["add", "blocked", "--base-score", "50", "--blocked-by", blocker_id])
+    capsys.readouterr()
+
+    main(["why", blocker_id])
+    out = capsys.readouterr().out
+    assert "blocker_transitive" in out
+    assert "+50" in out  # bumped from 1 -> 51
+
+
+def test_self_loop_warning_appears_on_stderr(home, capsys, monkeypatch):
+    main(["add", "self"])
+    task_id = capsys.readouterr().out.strip()
+
+    import json
+    p = home / "tasks.json"
+    data = json.loads(p.read_text())
+    for t in data:
+        if t["id"] == task_id:
+            t["blocked_by"] = [task_id]
+    p.write_text(json.dumps(data, indent=2, sort_keys=True))
+
+    main(["list"])
+    captured = capsys.readouterr()
+    assert "self-block" in captured.err

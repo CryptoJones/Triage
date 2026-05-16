@@ -70,9 +70,15 @@ Built-in rules for v0.1:
 - `deadline_decay`: if `task.deadline` is set, returns
   `clamp(deadline_pressure(remaining_time), 0, 100)`. As deadline
   approaches, the bump grows.
-- `blocker_transitive`: if `task.blocked_by` contains a task whose
-  priority is now higher than this task's current priority, raise this
-  task to one above its blocker. (Forces the unblock first.)
+- `blocker_transitive`: enforces the invariant `priority(blocker) >=
+  priority(blocked) + 1`. If A is `blocked_by` B, B's priority is
+  raised (not A's) to at least one above A's — because in queue order
+  B must be worked first. Implemented as a post-scoring reverse-topo
+  pass in the scheduler, not a per-task rule. Cycles in the
+  `blocked_by` graph are detected and broken via DFS back-edge removal
+  (deterministic by lex-sorted source-id traversal); each removed edge
+  emits a warning. Self-loops and dangling blocker ids also produce
+  warnings and are ignored.
 
 Future rules:
 
@@ -161,17 +167,18 @@ explainable.
 - Pure Python stdlib (no deps).
 - 100% deterministic given inputs → property-based tests possible.
 
-## v0.2+ roadmap
+## Roadmap
 
-| Version | Feature                                                       |
-|---------|---------------------------------------------------------------|
-| v0.2    | `blocker_transitive` rule + cycle detection                    |
-| v0.3    | `github-ci` signal source + rule                              |
-| v0.4    | `runpod-cost` signal source + rule (drain-idle-pods pressure) |
-| v0.5    | `github-pr` stale-PR signal source                            |
-| v0.6    | Claude Code skill: invokes `triage tick` then surfaces the    |
-|         | recommended reorder for confirmation                          |
-| v0.7    | Long-running mode (`triage watch`) instead of `triage tick`   |
+| Version | Feature                                                       | Status   |
+|---------|---------------------------------------------------------------|----------|
+| v0.1    | scaffold, three rules, cron-window signal, CLI                | shipped  |
+| v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
+| v0.3    | `github-ci` signal source + rule                              | planned  |
+| v0.4    | `runpod-cost` signal source + rule (drain-idle-pods pressure) | planned  |
+| v0.5    | `github-pr` stale-PR signal source                            | planned  |
+| v0.6    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
+|         | recommended reorder for confirmation                          |          |
+| v0.7    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
 
 ---
 
