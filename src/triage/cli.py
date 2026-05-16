@@ -9,7 +9,8 @@ import json
 import sys
 from typing import Sequence
 
-from . import __version__, cron, log_writer, scheduler, theme
+from . import __version__, cron, i18n, log_writer, scheduler, theme
+from .i18n import _
 from .model import Task
 from .sources import github_ci, github_pr, runpod
 from .store import Store
@@ -42,7 +43,8 @@ def _print_banner(t: theme.Theme, *, enabled: bool, title: str) -> None:
 
 def _print_warnings(t: theme.Theme, *, enabled: bool, warnings: list[str]) -> None:
     for w in warnings:
-        print(theme.paint(f"warning: {w}", t.warning, enabled=enabled), file=sys.stderr)
+        msg = _("warning: {message}", message=w)
+        print(theme.paint(msg, t.warning, enabled=enabled), file=sys.stderr)
 
 
 def cmd_add(args: argparse.Namespace) -> int:
@@ -83,8 +85,16 @@ def _format_row(t: theme.Theme, *, enabled: bool, s: scheduler.ScoredTask) -> st
 
 
 def _print_table(t: theme.Theme, *, enabled: bool, ranked: list[scheduler.ScoredTask]) -> None:
+    # Translate each column heading then re-pad — fixed widths
+    # (12/6/5) match the row layout in _format_row. If a locale
+    # produces a heading wider than the column, it will overflow
+    # by a couple of chars; tolerable for L1, refined later.
+    id_h = _("ID")
+    pri_h = _("PRI")
+    bar_h = _("BAR")
+    subj_h = _("SUBJECT")
     header_line = theme.paint(
-        f"  {'ID':<12}  {'PRI':>6}  {'BAR':<5}  SUBJECT",
+        f"  {id_h:<12}  {pri_h:>6}  {bar_h:<5}  {subj_h}",
         t.header,
         enabled=enabled,
     )
@@ -127,10 +137,10 @@ def cmd_list(args: argparse.Namespace) -> int:
     )
 
     if not ranked:
-        print(theme.paint("(no tasks)", t.dim, enabled=color))
+        print(theme.paint(_("(no tasks)"), t.dim, enabled=color))
         return 0
 
-    _print_banner(t, enabled=color, title=f"T R I A G E   v{__version__}")
+    _print_banner(t, enabled=color, title=_("T R I A G E   v{version}", version=__version__))
     _print_table(t, enabled=color, ranked=ranked)
     return 0
 
@@ -143,7 +153,7 @@ def cmd_show(args: argparse.Namespace) -> int:
             print(json.dumps(task.to_dict(), indent=2, sort_keys=True))
             return 0
     print(
-        theme.paint(f"no task with id {args.id}", t.warning, enabled=color),
+        theme.paint(_("no task with id {id}", id=args.id), t.warning, enabled=color),
         file=sys.stderr,
     )
     return 1
@@ -161,12 +171,16 @@ def cmd_why(args: argparse.Namespace) -> int:
 
     for s in ranked:
         if s.task.id == args.id:
-            heading = f" task {s.task.id}: {s.task.subject} "
+            heading = " " + _("task {id}: {subject}", id=s.task.id, subject=s.task.subject) + " "
             rule = t.rule * 3
             print(theme.paint(f"{rule}{heading}{rule}", t.header, enabled=color))
             pri_color = theme.priority_color(t, s.priority)
+            # Render `priority = <colored value>  <colored bar>`.
+            # Split so the bar/value stay color-banded but the
+            # label/equals get localized.
+            label = _("priority = {priority}", priority="").rstrip(" =") + " = "
             print(
-                "  priority = "
+                "  " + label
                 + theme.paint(str(s.priority), pri_color, enabled=color)
                 + "  "
                 + theme.paint(
@@ -188,7 +202,7 @@ def cmd_why(args: argparse.Namespace) -> int:
             return 0
 
     print(
-        theme.paint(f"no task with id {args.id}", t.warning, enabled=color),
+        theme.paint(_("no task with id {id}", id=args.id), t.warning, enabled=color),
         file=sys.stderr,
     )
     return 1
@@ -215,10 +229,9 @@ def cmd_tick(args: argparse.Namespace) -> int:
         warnings=warnings,
     )
 
-    _print_banner(t, enabled=color, title=f"T R I A G E   T I C K   v{__version__}")
-    summary = (
-        f"emitted {emitted} cron signal(s); ranked {len(ranked)} task(s)"
-    )
+    _print_banner(t, enabled=color, title=_("T R I A G E   T I C K   v{version}", version=__version__))
+    summary = _("emitted {emitted} cron signal(s); ranked {ranked} task(s)",
+                emitted=emitted, ranked=len(ranked))
     print(theme.paint(summary, t.header, enabled=color))
     _print_table(t, enabled=color, ranked=ranked)
     return 0
@@ -229,8 +242,10 @@ def cmd_poll(args: argparse.Namespace) -> int:
     t, color = _theme(args)
     poller = POLLERS.get(args.source)
     if poller is None:
-        msg = (
-            f"unknown source: {args.source}. known: {', '.join(sorted(POLLERS))}"
+        msg = _(
+            "unknown source: {source}. known: {known}",
+            source=args.source,
+            known=", ".join(sorted(POLLERS)),
         )
         print(theme.paint(msg, t.warning, enabled=color), file=sys.stderr)
         return 1
@@ -239,7 +254,8 @@ def cmd_poll(args: argparse.Namespace) -> int:
     _print_warnings(t, enabled=color, warnings=warnings)
     print(
         theme.paint(
-            f"polled {args.source}: emitted {emitted} signal(s)",
+            _("polled {source}: emitted {emitted} signal(s)",
+              source=args.source, emitted=emitted),
             t.success,
             enabled=color,
         )
@@ -280,10 +296,11 @@ def cmd_signal(args: argparse.Namespace) -> int:
         state=args.state,
         note=args.note,
     )
-    affected_str = ",".join(args.affects) if args.affects else "(all tasks)"
+    affected_str = ",".join(args.affects) if args.affects else _("(all tasks)")
     print(
         theme.paint(
-            f"signal emitted: source={args.source} bump={args.bump} ttl={args.ttl}s affects={affected_str}",
+            _("signal emitted: source={source} bump={bump} ttl={ttl}s affects={affects}",
+              source=args.source, bump=args.bump, ttl=args.ttl, affects=affected_str),
             t.success,
             enabled=color,
         )
@@ -299,13 +316,13 @@ def cmd_rm(args: argparse.Namespace) -> int:
     tasks = [task for task in tasks if task.id != args.id]
     if len(tasks) == before:
         print(
-            theme.paint(f"no task with id {args.id}", t.warning, enabled=color),
+            theme.paint(_("no task with id {id}", id=args.id), t.warning, enabled=color),
             file=sys.stderr,
         )
         return 1
     store.save_tasks(tasks)
     log_writer.log("rm", task_id=args.id)
-    print(theme.paint(f"removed {args.id}", t.success, enabled=color))
+    print(theme.paint(_("removed {id}", id=args.id), t.success, enabled=color))
     return 0
 
 
@@ -357,21 +374,21 @@ def cmd_status(args: argparse.Namespace) -> int:
         }, indent=2, sort_keys=True))
         return 0
 
-    _print_banner(t, enabled=color, title=f"T R I A G E   S T A T U S")
+    _print_banner(t, enabled=color, title=_("T R I A G E   S T A T U S"))
 
-    print(theme.paint("  TOP 3", t.header, enabled=color))
+    print(theme.paint("  " + _("TOP 3"), t.header, enabled=color))
     print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
     if not ranked:
-        print(theme.paint("    (no tasks)", t.dim, enabled=color))
+        print(theme.paint("    " + _("(no tasks)"), t.dim, enabled=color))
     else:
         for s in ranked[:3]:
             print(_format_row(t, enabled=color, s=s))
 
     print()
-    print(theme.paint(f"  TAGS ({len(tag_counts)})", t.header, enabled=color))
+    print(theme.paint("  " + _("TAGS ({n})", n=len(tag_counts)), t.header, enabled=color))
     print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
     if not tag_counts:
-        print(theme.paint("    (no tags)", t.dim, enabled=color))
+        print(theme.paint("    " + _("(no tags)"), t.dim, enabled=color))
     else:
         for tag, n in sorted(tag_counts.items(), key=lambda kv: (-kv[1], kv[0])):
             count_part = theme.paint(f"{n:>3}", t.priority_mid, enabled=color)
@@ -379,10 +396,13 @@ def cmd_status(args: argparse.Namespace) -> int:
             print(f"    {count_part}  {tag_part}")
 
     print()
-    print(theme.paint(f"  ACTIVE SIGNALS ({sum(signal_counts.values())})", t.header, enabled=color))
+    print(theme.paint(
+        "  " + _("ACTIVE SIGNALS ({n})", n=sum(signal_counts.values())),
+        t.header, enabled=color,
+    ))
     print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
     if not signal_counts:
-        print(theme.paint("    (no active signals)", t.dim, enabled=color))
+        print(theme.paint("    " + _("(no active signals)"), t.dim, enabled=color))
     else:
         for source, n in sorted(signal_counts.items(), key=lambda kv: (-kv[1], kv[0])):
             count_part = theme.paint(f"{n:>3}", t.priority_mid, enabled=color)
@@ -391,7 +411,8 @@ def cmd_status(args: argparse.Namespace) -> int:
 
     print()
     print(theme.paint(
-        f"  total tasks: {len(tasks)}    ranked: {len(ranked)}",
+        "  " + _("total tasks: {tasks}    ranked: {ranked}",
+                 tasks=len(tasks), ranked=len(ranked)),
         t.dim,
         enabled=color,
     ))
@@ -411,22 +432,23 @@ def cmd_theme(args: argparse.Namespace) -> int:
         color = theme.should_color(sys.stdout) and t.name != "mono"
         if args.no_color:
             color = False
-        _print_banner(t, enabled=color, title=f"theme preview: {t.name}")
-        # Mock a few rows
+        _print_banner(t, enabled=color, title=_("theme preview: {name}", name=t.name))
+        # Mock a few rows. Subjects are translated so a preview in
+        # the active locale shows realistic content.
         from .model import Task
         mock = [
             scheduler.ScoredTask(
-                task=Task(id="aaaa11112222", subject="Critical hotfix"),
+                task=Task(id="aaaa11112222", subject=_("Critical hotfix")),
                 priority=120,
                 contributions=[],
             ),
             scheduler.ScoredTask(
-                task=Task(id="bbbb33334444", subject="Deploy migration"),
+                task=Task(id="bbbb33334444", subject=_("Deploy migration")),
                 priority=45,
                 contributions=[],
             ),
             scheduler.ScoredTask(
-                task=Task(id="cccc55556666", subject="Catch up on email"),
+                task=Task(id="cccc55556666", subject=_("Catch up on email")),
                 priority=3,
                 contributions=[],
             ),
@@ -441,47 +463,65 @@ def cmd_theme(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_lang(args: argparse.Namespace) -> int:
+    """List available output languages (or switch via --lang on any command)."""
+    print(_("available languages (default: {default}):", default=i18n.DEFAULT_LANG))
+    for code, native in i18n.list_available():
+        marker = " *" if code == i18n.DEFAULT_LANG else "  "
+        active = " (active)" if code == i18n.current_lang() else ""
+        print(f"{marker} {code}  {native}{active}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="triage",
-        description="Meta-scheduler that watches signals and reorders its own queue.",
+        description=_("Meta-scheduler that watches signals and reorders its own queue."),
     )
     p.add_argument("--version", action="version", version=f"triage {__version__}")
     p.add_argument(
         "--home",
-        help="Override TRIAGE_HOME (default: ~/.triage or $TRIAGE_HOME).",
+        help=_("Override TRIAGE_HOME (default: ~/.triage or $TRIAGE_HOME)."),
     )
     p.add_argument(
         "--theme",
         choices=sorted(theme.THEMES),
         default=None,
-        help=(
-            f"Output theme (default from $TRIAGE_THEME or {theme.DEFAULT_THEME}). "
-            "Set NO_COLOR=1 to disable colors regardless of theme."
+        help=_(
+            "Output theme (default from $TRIAGE_THEME or {default}). "
+            "Set NO_COLOR=1 to disable colors regardless of theme.",
+            default=theme.DEFAULT_THEME,
         ),
     )
     p.add_argument(
         "--no-color",
         action="store_true",
-        help="Force-disable ANSI color even on a TTY.",
+        help=_("Force-disable ANSI color even on a TTY."),
+    )
+    p.add_argument(
+        "--lang",
+        default=None,
+        help=_("Language for CLI output (default from $TRIAGE_LANG, $LANG, or 'en')."),
     )
     p.add_argument(
         "--log-file",
         default=None,
-        help=(
+        help=_(
             "Append JSONL events to this path "
-            f"(default: $TRIAGE_LOG_FILE or {log_writer.DEFAULT_LOG_PATH}; "
-            f"falls back to {log_writer.FALLBACK_LOG_PATH} if unwritable)."
+            "(default: $TRIAGE_LOG_FILE or {default}; "
+            "falls back to {fallback} if unwritable).",
+            default=log_writer.DEFAULT_LOG_PATH,
+            fallback=log_writer.FALLBACK_LOG_PATH,
         ),
     )
     p.add_argument(
         "--no-log",
         action="store_true",
-        help="Disable JSONL event logging for this invocation.",
+        help=_("Disable JSONL event logging for this invocation."),
     )
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    a = sub.add_parser("add", help="Add a task.")
+    a = sub.add_parser("add", help=_("Add a task."))
     a.add_argument("subject")
     a.add_argument("--description", default="")
     a.add_argument("--base-score", type=int, default=0)
@@ -494,24 +534,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     a.set_defaults(func=cmd_add)
 
-    lst = sub.add_parser("list", help="Show the current priority order.")
+    lst = sub.add_parser("list", help=_("Show the current priority order."))
     lst.add_argument("--json", action="store_true")
     lst.set_defaults(func=cmd_list)
 
-    sh = sub.add_parser("show", help="Show one task's full record.")
+    sh = sub.add_parser("show", help=_("Show one task's full record."))
     sh.add_argument("id")
     sh.set_defaults(func=cmd_show)
 
-    why = sub.add_parser("why", help="Audit log of rule contributions for a task.")
+    why = sub.add_parser("why", help=_("Audit log of rule contributions for a task."))
     why.add_argument("id")
     why.set_defaults(func=cmd_why)
 
-    tk = sub.add_parser("tick", help="Recompute priorities; print new order.")
+    tk = sub.add_parser("tick", help=_("Recompute priorities; print new order."))
     tk.set_defaults(func=cmd_tick)
 
     pl = sub.add_parser(
         "poll",
-        help="Invoke a network-bound signal source's poller.",
+        help=_("Invoke a network-bound signal source's poller."),
     )
     pl.add_argument(
         "source",
@@ -521,7 +561,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sg = sub.add_parser(
         "signal",
-        help="Inject a manual signal (for external watchers like RunPodBoss).",
+        help=_("Inject a manual signal (for external watchers like RunPodBoss)."),
     )
     sg_sub = sg.add_subparsers(dest="signal_cmd", required=True)
     manual = sg_sub.add_parser(
@@ -563,18 +603,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     manual.set_defaults(func=cmd_signal)
 
-    rm = sub.add_parser("rm", help="Remove a task by id.")
+    rm = sub.add_parser("rm", help=_("Remove a task by id."))
     rm.add_argument("id")
     rm.set_defaults(func=cmd_rm)
 
     st = sub.add_parser(
         "status",
-        help="One-screen at-a-glance: top-3 tasks, tag counts, signal counts.",
+        help=_("One-screen at-a-glance: top-3 tasks, tag counts, signal counts."),
     )
     st.add_argument("--json", action="store_true", help="Emit JSON instead of human-readable.")
     st.set_defaults(func=cmd_status)
 
-    th = sub.add_parser("theme", help="List themes, or preview one with --name.")
+    th = sub.add_parser("theme", help=_("List themes, or preview one with --name."))
     th.add_argument(
         "--name",
         choices=sorted(theme.THEMES),
@@ -582,12 +622,39 @@ def build_parser() -> argparse.ArgumentParser:
     )
     th.set_defaults(func=cmd_theme)
 
+    lng = sub.add_parser("lang", help=_("List available output languages."))
+    lng.set_defaults(func=cmd_lang)
+
     return p
 
 
+def _peek_lang(argv: Sequence[str] | None) -> str | None:
+    """Pre-scan argv for `--lang LANG` so help-strings come back localized.
+
+    argparse builds the help text from whatever `_()` returns at
+    parser-construction time, so we need to resolve the locale
+    BEFORE build_parser() runs. We do that here without touching
+    argparse so an invalid value falls through to argparse's normal
+    error path on the second pass.
+    """
+    if argv is None:
+        argv = sys.argv[1:]
+    it = iter(argv)
+    for tok in it:
+        if tok == "--lang":
+            return next(it, None)
+        if tok.startswith("--lang="):
+            return tok.split("=", 1)[1]
+    return None
+
+
 def main(argv: Sequence[str] | None = None) -> int:
+    i18n.configure(_peek_lang(argv))
     parser = build_parser()
     args = parser.parse_args(argv)
+    # If `--lang` actually parsed to a different value (e.g. via
+    # ambiguous prefix), reconfigure so the command body uses it too.
+    i18n.configure(getattr(args, "lang", None))
     log_writer.configure(path=getattr(args, "log_file", None), disabled=getattr(args, "no_log", False))
     return args.func(args)
 
