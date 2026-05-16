@@ -74,7 +74,13 @@ def test_score_composes_rules_additively_with_named_contributions():
     total, contribs = score(t, [])
     assert total == 10
     names = [c.name for c in contribs]
-    assert names == ["base_score", "deadline_decay", "cron_window_active", "ci_failing"]
+    assert names == [
+        "base_score",
+        "deadline_decay",
+        "cron_window_active",
+        "ci_failing",
+        "cost_pressure",
+    ]
     assert sum(c.delta for c in contribs) == total
 
 

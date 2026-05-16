@@ -82,8 +82,6 @@ Built-in rules for v0.1:
 
 Future rules:
 
-- `cost_pressure`: if a `runpod-cost` signal reports an idle pod tagged
-  with this task's tag, +100 (drain it).
 - `stale_pr`: if a `github-pr` signal reports a PR sitting unreviewed
   for >24h, +20.
 
@@ -95,6 +93,17 @@ Future rules:
   `gh-ci:owner/repo@branch` and emits one signal per matching task.
   Invoked manually via `triage poll github-ci` (not auto-emitted on
   `triage tick` because it's network-bound).
+
+### Shipped in v0.5
+
+- `cost_pressure`: bump tasks tagged for a paid pod that's currently
+  running. +100 when state == 'idle' (uptime > 10 min AND avg GPU
+  util < 10% — drain it now); +25 when state == 'running' (utilization
+  unknown or above threshold — softer reminder). The companion source
+  `triage.sources.runpod` polls the RunPod GraphQL API for tasks
+  tagged `runpod:<pod-id>` and emits one signal per pod. Invoked
+  manually via `triage poll runpod-cost`. Requires `RUNPOD_API_KEY`
+  in env (or explicit token).
 
 ### Priority
 
@@ -182,7 +191,7 @@ explainable.
 | v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
 | v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
 | v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
-| v0.5    | `runpod-cost` signal source + rule (drain-idle-pods pressure) | planned  |
+| v0.5    | `runpod-cost` signal source + `cost_pressure` rule            | shipped  |
 | v0.6    | `github-pr` stale-PR signal source                            | planned  |
 | v0.7    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
 |         | recommended reorder for confirmation                          |          |

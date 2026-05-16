@@ -75,11 +75,33 @@ def rule_ci_failing(task: Task, signals: list[Signal]) -> int:
     return 0
 
 
+def rule_cost_pressure(task: Task, signals: list[Signal]) -> int:
+    """Bump tasks tagged for a paid pod that's currently running.
+
+    +100 when state == 'idle' (pod is up + GPUs are unused — drain it now).
+    +25  when state == 'running' (pod is up; utilization unknown or above
+         the idle threshold — softer reminder you're paying for it).
+    0    otherwise (stopped / unknown / no matching signal).
+    """
+    for sig in signals:
+        if sig.source != "runpod-cost":
+            continue
+        if sig.affects and task.id not in sig.affects:
+            continue
+        state = sig.payload.get("state")
+        if state == "idle":
+            return 100
+        if state == "running":
+            return 25
+    return 0
+
+
 DEFAULT_RULES: list[tuple[str, RuleFn]] = [
     ("base_score", rule_base_score),
     ("deadline_decay", rule_deadline_decay),
     ("cron_window_active", rule_cron_window_active),
     ("ci_failing", rule_ci_failing),
+    ("cost_pressure", rule_cost_pressure),
 ]
 
 
