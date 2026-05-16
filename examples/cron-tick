@@ -1,0 +1,33 @@
+# /etc/cron.d/triage — system-wide cron entry for periodic Triage tick.
+#
+# Install:
+#   sudo install -m 0644 examples/cron-tick /etc/cron.d/triage
+#   # or, for user-only crontab:
+#   ( crontab -l 2>/dev/null; cat examples/cron-tick ) | crontab -
+#
+# What it does:
+# - Every 5 minutes: refreshes priorities + writes a "tick" event
+#   to /var/log/triage.log so external agents tailing the log see
+#   fresh state. Cheap, local-only (cron-window signals are pure
+#   date math; no network).
+# - Every hour: also polls the github-ci signal source.
+# - Every 10 minutes: also polls github-pr (light load).
+# - Hourly: polls runpod-cost (requires RUNPOD_API_KEY in env;
+#   skipped silently if unset).
+#
+# Replace `akclark` with your username; replace the PATH below if
+# your `triage` install is elsewhere. The `TRIAGE_HOME` matters
+# because cron has a minimal default environment.
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TRIAGE_HOME=/home/akclark/.triage
+# Uncomment to enable network sources:
+# GITHUB_TOKEN=ghp_xxx
+# RUNPOD_API_KEY=rk_xxx
+
+# m  h  dom mon dow user      command
+*/5  *  *   *   *   akclark   /usr/local/bin/triage tick >/dev/null 2>&1
+*/10 *  *   *   *   akclark   /usr/local/bin/triage poll github-pr >/dev/null 2>&1
+0    *  *   *   *   akclark   /usr/local/bin/triage poll github-ci >/dev/null 2>&1
+0    *  *   *   *   akclark   /usr/local/bin/triage poll runpod-cost >/dev/null 2>&1
