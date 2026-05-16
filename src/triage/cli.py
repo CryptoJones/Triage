@@ -11,7 +11,6 @@ from typing import Sequence
 
 from . import __version__, cron, scheduler
 from .model import Task
-from .rules import score
 from .store import Store
 
 
@@ -40,7 +39,11 @@ def cmd_add(args: argparse.Namespace) -> int:
 def cmd_list(args: argparse.Namespace) -> int:
     store = _store_from_args(args)
     cron.emit(store)
-    ranked = scheduler.tick(store)
+    tasks = store.load_tasks()
+    signals = store.active_signals()
+    ranked, warnings = scheduler.rank_with_warnings(tasks, signals)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
     if args.json:
         out = [
             {
@@ -73,13 +76,16 @@ def cmd_show(args: argparse.Namespace) -> int:
 def cmd_why(args: argparse.Namespace) -> int:
     store = _store_from_args(args)
     cron.emit(store)
+    tasks = store.load_tasks()
     signals = store.active_signals()
-    for t in store.load_tasks():
-        if t.id == args.id:
-            total, contribs = score(t, signals)
-            print(f"task {t.id}: {t.subject}")
-            print(f"priority = {total}")
-            for c in contribs:
+    ranked, warnings = scheduler.rank_with_warnings(tasks, signals)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
+    for s in ranked:
+        if s.task.id == args.id:
+            print(f"task {s.task.id}: {s.task.subject}")
+            print(f"priority = {s.priority}")
+            for c in s.contributions:
                 marker = "  ·" if c.delta == 0 else "  +"
                 print(f"{marker} {c.name}: {c.delta:+d}")
             return 0
@@ -90,7 +96,11 @@ def cmd_why(args: argparse.Namespace) -> int:
 def cmd_tick(args: argparse.Namespace) -> int:
     store = _store_from_args(args)
     emitted = cron.emit(store)
-    ranked = scheduler.tick(store)
+    tasks = store.load_tasks()
+    signals = store.active_signals()
+    ranked, warnings = scheduler.rank_with_warnings(tasks, signals)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
     print(f"emitted {emitted} cron signal(s); ranked {len(ranked)} task(s)")
     for s in ranked:
         print(f"  {s.task.id}  [{s.priority:>4}]  {s.task.subject}")
