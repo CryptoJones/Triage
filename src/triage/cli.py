@@ -247,6 +247,50 @@ def cmd_poll(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_signal(args: argparse.Namespace) -> int:
+    """Inject a manual signal into the store. Used by RunPodBoss-style
+    external watchers (and humans) to bump priority programmatically.
+    """
+    from datetime import datetime, timezone
+    from .model import Signal
+
+    store = _store_from_args(args)
+    t, color = _theme(args)
+
+    payload: dict[str, object] = {"bump": args.bump}
+    if args.note:
+        payload["note"] = args.note
+    if args.state:
+        payload["state"] = args.state
+
+    sig = Signal(
+        source=args.source,
+        captured_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        payload=payload,
+        affects=list(args.affects or []),
+        ttl_seconds=args.ttl,
+    )
+    store.append_signal(sig)
+    log_writer.log(
+        "signal",
+        source=args.source,
+        bump=args.bump,
+        ttl_seconds=args.ttl,
+        affects=list(args.affects or []),
+        state=args.state,
+        note=args.note,
+    )
+    affected_str = ",".join(args.affects) if args.affects else "(all tasks)"
+    print(
+        theme.paint(
+            f"signal emitted: source={args.source} bump={args.bump} ttl={args.ttl}s affects={affected_str}",
+            t.success,
+            enabled=color,
+        )
+    )
+    return 0
+
+
 def cmd_rm(args: argparse.Namespace) -> int:
     store = _store_from_args(args)
     t, color = _theme(args)
@@ -385,6 +429,50 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"Signal source to poll. Known: {', '.join(sorted(POLLERS))}.",
     )
     pl.set_defaults(func=cmd_poll)
+
+    sg = sub.add_parser(
+        "signal",
+        help="Inject a manual signal (for external watchers like RunPodBoss).",
+    )
+    sg_sub = sg.add_subparsers(dest="signal_cmd", required=True)
+    manual = sg_sub.add_parser(
+        "manual",
+        help="Write a one-off signal with a numeric priority bump.",
+    )
+    manual.add_argument(
+        "--source",
+        required=True,
+        help='Signal source name (e.g. "runpodboss", "manual", "operator").',
+    )
+    manual.add_argument(
+        "--affects",
+        action="append",
+        help="Task id this signal targets. Pass multiple times for multiple tasks. "
+        "Omit to target all tasks.",
+    )
+    manual.add_argument(
+        "--bump",
+        type=int,
+        required=True,
+        help="Priority delta applied by rule_manual_bump while the signal is fresh.",
+    )
+    manual.add_argument(
+        "--ttl",
+        type=int,
+        default=1800,
+        help="Signal TTL in seconds (default: 1800).",
+    )
+    manual.add_argument(
+        "--note",
+        default=None,
+        help="Free-text annotation written into the signal payload.",
+    )
+    manual.add_argument(
+        "--state",
+        default=None,
+        help="Optional state label (e.g. 'warning', 'critical'); shows up in audit log.",
+    )
+    manual.set_defaults(func=cmd_signal)
 
     rm = sub.add_parser("rm", help="Remove a task by id.")
     rm.add_argument("id")

@@ -81,6 +81,7 @@ def test_score_composes_rules_additively_with_named_contributions():
         "ci_failing",
         "cost_pressure",
         "stale_pr",
+        "manual_bump",
     ]
     assert sum(c.delta for c in contribs) == total
 
