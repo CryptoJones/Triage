@@ -112,6 +112,38 @@ def rule_stale_pr(task: Task, signals: list[Signal]) -> int:
     return 0
 
 
+def rule_manual_bump(task: Task, signals: list[Signal]) -> int:
+    """Sum of all `bump` payloads from any external watcher's signals.
+
+    This is the rule that lets `triage signal manual --bump N` (and
+    RunPodBoss-style integrations via the `extra_notify_command` hook)
+    push priority deltas into Triage without needing a bespoke rule
+    per source. The signal source name is intentionally unconstrained
+    (could be "runpodboss", "manual", "operator", "calendar", anything)
+    — what matters is the `bump` integer in the payload.
+
+    Multiple bumps stack within their TTL window, so a chain of three
+    +50 bumps on the same task contributes +150. This is by design:
+    cumulative pressure is a meaningful signal.
+    """
+    total = 0
+    for sig in signals:
+        if sig.source in {
+            "cron",
+            "github-ci",
+            "github-pr",
+            "runpod-cost",
+        }:
+            # First-class sources have dedicated rules; don't double-count.
+            continue
+        if sig.affects and task.id not in sig.affects:
+            continue
+        bump = sig.payload.get("bump")
+        if isinstance(bump, int):
+            total += bump
+    return total
+
+
 DEFAULT_RULES: list[tuple[str, RuleFn]] = [
     ("base_score", rule_base_score),
     ("deadline_decay", rule_deadline_decay),
@@ -119,6 +151,7 @@ DEFAULT_RULES: list[tuple[str, RuleFn]] = [
     ("ci_failing", rule_ci_failing),
     ("cost_pressure", rule_cost_pressure),
     ("stale_pr", rule_stale_pr),
+    ("manual_bump", rule_manual_bump),
 ]
 
 

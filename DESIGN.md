@@ -194,9 +194,10 @@ explainable.
 | v0.5    | `runpod-cost` signal source + `cost_pressure` rule            | shipped  |
 | v0.6    | JSONL event log writer for external agents                    | shipped  |
 | v0.7    | `github-pr` stale-PR signal source + `stale_pr` rule          | shipped  |
-| v0.8    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
+| v0.8    | `triage signal` CLI + `manual_bump` rule + RunPodBoss eval    | shipped  |
+| v0.9    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
 |         | recommended reorder for confirmation                          |          |
-| v0.9    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
+| v0.10   | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
 
 ---
 
