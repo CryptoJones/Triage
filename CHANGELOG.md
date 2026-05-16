@@ -1,0 +1,209 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Planned
+- v0.9 — Claude Code `triage` skill in `claude_skill-Triage/triage/`
+  (wraps `triage tick` + `triage list --json` + `triage why <id>`,
+  surfaces top-N tasks with rule contributions; operator confirms
+  before any reorder).
+- v0.10 — `triage watch` long-running mode + `examples/triage.service`
+  systemd unit.
+
+---
+
+## [0.8.0] — 2026-05-16
+
+### Added
+- `triage signal manual` CLI verb for injecting one-off signals from
+  external watchers (RunPodBoss, calendar daemons, anything). Flags:
+  `--source NAME`, `--affects ID` (repeatable), `--bump N`, `--ttl SECS`,
+  `--note STR`, `--state STR`. Emitted signal lives in
+  `~/.triage/state/<source>.jsonl`.
+- `rule_manual_bump` rule that sums `bump` integers from any non-
+  first-class signal source. Multiple bumps stack within their TTL
+  window. Added to `DEFAULT_RULES` (now 7 rules).
+- `docs/runpodboss-integration.md` — evaluation answering "can
+  RunPodBoss connect to Triage?" The recommended integration is a
+  config-only change in RunPodBoss using its existing
+  `extra_notify_command` hook; no RunPodBoss code required.
+
+### Changed
+- `rule_manual_bump` explicitly excludes signals from `cron`,
+  `github-ci`, `github-pr`, `runpod-cost` (those have dedicated
+  rules) so it never double-counts.
+
+[0.8.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.8.0
+
+---
+
+## [0.7.0] — 2026-05-16
+
+### Added
+- `src/triage/sources/github_pr.py` — third network-bound signal
+  source. Tasks tagged `gh-pr:owner/repo` (all open PRs) or
+  `gh-pr:owner/repo#N` (specific PR). Polls GitHub Pulls API.
+- `rule_stale_pr` rule: +20 when a `github-pr` signal targeting the
+  task has `state == "stale"` (updated_at > 24h old). Added to
+  `DEFAULT_RULES`.
+- States classified per PR: `fresh` (< 24h), `stale` (≥ 24h),
+  `missing` (specific-PR 404), `unknown` (unparseable response).
+- 27 new tests in `tests/test_github_pr.py`.
+
+[0.7.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.7.0
+
+---
+
+## [0.6.0] — 2026-05-16
+
+### Added
+- `src/triage/log_writer.py` — JSONL event log writer for external
+  agents. Strictly one-way side channel: Triage writes, agents read.
+- Global `--log-file PATH` and `--no-log` CLI flags; `TRIAGE_LOG_FILE`
+  and `TRIAGE_NO_LOG` environment variables.
+- Events logged: `add`, `list`, `tick`, `poll`, `rm`, `signal`. Each
+  entry is one append-flushed JSON line so a tailing agent never
+  sees a partial record.
+
+### Defaults
+- Log path defaults to `/var/log/triage.log`; falls back to
+  `~/.triage/triage.log` with a one-time stderr breadcrumb if the
+  system path isn't writable. Explicit `--log-file` / `TRIAGE_LOG_FILE`
+  values that aren't writable warn + disable rather than silently
+  re-routing.
+
+### Safety
+- Logging never breaks the CLI. All write errors are swallowed.
+- `ts` and `event` fields are reserved — user kwargs cannot overwrite.
+
+### Tests
+- 24 new tests across `tests/test_log_writer.py` and
+  `tests/test_cli_logging.py` (158 total passing).
+
+[0.6.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.6.0
+
+---
+
+## [0.5.0] — 2026-05-16
+
+### Added
+- `src/triage/sources/runpod.py` — second network-bound signal
+  source. Tasks tagged `runpod:<pod-id>`. Polls RunPod GraphQL API
+  for the current state of every referenced pod.
+- `rule_cost_pressure` rule (two-tier scoring):
+  - **+100** when state == `idle` (RUNNING + uptime > 10 min + avg
+    GPU util < 10% — drain it now).
+  - **+25** when state == `running` (paying but util unknown or
+    above the idle threshold — softer reminder).
+- Per-pod grouping: when multiple tasks share a `runpod:<pod-id>`
+  tag, one signal is emitted with `affects = [list of task ids]`.
+
+[0.5.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.5.0
+
+---
+
+## [0.4.0] — 2026-05-16
+
+### Added
+- `src/triage/theme.py` — BBS-style ANSI theme system. Three themes
+  ship:
+  - **`bbs`** (default) — 1990s BBS: bright magenta double-line
+    banners (`╔═╗║╚╝`), color-banded priorities, block-character
+    priority bars (`█▒░`).
+  - **`modern`** — subtle palette, single-line boxes (`┌─┐`),
+    dot-fill bars (`█▒·`).
+  - **`mono`** — no color, ASCII-only (`+-+`, `#=.`).
+- Global `--theme NAME` flag and `TRIAGE_THEME` environment variable.
+- `--no-color` flag and `NO_COLOR=1` environment variable
+  (per [no-color.org](https://no-color.org/)).
+- `FORCE_COLOR=1` to enable color on non-TTY surfaces.
+- New `triage theme` subcommand: lists themes or `--name <theme>`
+  renders sample rows for visual selection.
+
+### Changed
+- `list`, `tick`, `why`, `poll`, `rm`, `show` all themed by default.
+- Banner appears on `triage list` and `triage tick` output.
+
+[0.4.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.4.0
+
+---
+
+## [0.3.0] — 2026-05-15
+
+### Added
+- `src/triage/sources/github_ci.py` — first network-bound signal
+  source. Tasks tagged `gh-ci:owner/repo@branch` (branch names with
+  slashes supported). Polls GitHub Actions API for the most recent
+  workflow run.
+- `rule_ci_failing` rule: +50 when a `github-ci` signal targeting the
+  task reports `state == "failure"`.
+- `triage poll <source>` CLI verb for explicit network-bound polls.
+  Cron remains auto-emitted on `triage tick`; `github-ci` is opt-in.
+- Auth via optional `GITHUB_TOKEN` environment variable.
+
+### Tests
+- 24 new tests; `_fetch_runs` is monkeypatched in every test (no
+  real network calls).
+
+[0.3.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.3.0
+
+---
+
+## [0.2.0] — 2026-05-15
+
+### Added
+- `blocker_transitive` propagation: enforces the invariant
+  `priority(blocker) ≥ priority(blocked) + 1` across the entire
+  task graph. Implemented as a post-scoring reverse-topo pass in the
+  scheduler.
+- DFS-based cycle detection: cycles in the `blocked_by` graph are
+  broken via back-edge removal (deterministic by lex-sorted source-id
+  traversal). Each removed edge is recorded as a warning.
+- Self-loop and dangling-blocker-id detection (warns + ignores).
+
+### Fixed
+- v0.1 `DESIGN.md` had the propagation semantic backward — it
+  described raising the *blocked* task above its blocker, when the
+  correct semantic is the opposite (the *blocker* must outrank what
+  it blocks). Doc rewritten; behavior was always correct (it just
+  hadn't been implemented yet).
+
+### Tests
+- 12 new tests in `tests/test_blocker_transitive.py`.
+
+[0.2.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.2.0
+
+---
+
+## [0.1.0] — 2026-05-15
+
+### Added
+- Initial release. Stdlib-only Python package.
+- Task model with stable IDs, base_score, deadline, tags, blocked_by,
+  cron_window fields.
+- Signal model with TTL-based expiry.
+- Atomic file-backed `Store` (`~/.triage/`, overridable via
+  `TRIAGE_HOME`).
+- Three built-in scoring rules: `base_score`, `deadline_decay`,
+  `cron_window_active`. Each contribution is named and auditable via
+  `triage why <id>`.
+- `Scheduler`: `rank(tasks, signals) -> sorted ScoredTask list`.
+- First signal source: `cron-window`. Tasks opt in via
+  `--cron-window` with a five-field cron expression; the source
+  emits per-task signals with `payload.active` reflecting whether
+  the window is currently open.
+- CLI verbs: `triage add | list | show | why | tick | rm`, with
+  `--json` on `list`.
+- 39 tests across model, store, rules, scheduler, cron, cli.
+- GitHub Actions + Codeberg Woodpecker pipelines.
+
+[0.1.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.1.0
+
+---
+
+Proudly Made in Nebraska. Go Big Red! 🌽 https://xkcd.com/2347/
