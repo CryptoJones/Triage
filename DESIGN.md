@@ -192,10 +192,11 @@ explainable.
 | v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
 | v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
 | v0.5    | `runpod-cost` signal source + `cost_pressure` rule            | shipped  |
-| v0.6    | `github-pr` stale-PR signal source                            | planned  |
-| v0.7    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
+| v0.6    | JSONL event log writer for external agents                    | shipped  |
+| v0.7    | `github-pr` stale-PR signal source                            | planned  |
+| v0.8    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
 |         | recommended reorder for confirmation                          |          |
-| v0.8    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
+| v0.9    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
 
 ---
 
