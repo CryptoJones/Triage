@@ -20,6 +20,13 @@ you exactly why.
 [![Codeberg](https://img.shields.io/badge/Codeberg-CryptoJones%2FTriage-2185D0?logo=codeberg&logoColor=white)](https://codeberg.org/CryptoJones/Triage)
 [![GitHub](https://img.shields.io/badge/GitHub-CryptoJones%2FTriage-181717?logo=github&logoColor=white)](https://github.com/CryptoJones/Triage)
 
+**Read this in:** **English** ·
+[Español](README.es.md) ·
+[Français](README.fr.md) ·
+[Deutsch](README.de.md) ·
+[Italiano](README.it.md) ·
+[Português](README.pt.md)
+
 </div>
 
 > Mirrored on both [GitHub](https://github.com/CryptoJones/Triage) and
