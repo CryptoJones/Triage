@@ -11,7 +11,12 @@ from typing import Sequence
 
 from . import __version__, cron, scheduler
 from .model import Task
+from .sources import github_ci
 from .store import Store
+
+POLLERS: dict[str, callable] = {
+    "github-ci": lambda store: github_ci.poll(store),
+}
 
 
 def _store_from_args(args: argparse.Namespace) -> Store:
@@ -107,6 +112,22 @@ def cmd_tick(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_poll(args: argparse.Namespace) -> int:
+    store = _store_from_args(args)
+    poller = POLLERS.get(args.source)
+    if poller is None:
+        print(
+            f"unknown source: {args.source}. known: {', '.join(sorted(POLLERS))}",
+            file=sys.stderr,
+        )
+        return 1
+    emitted, warnings = poller(store)
+    for w in warnings:
+        print(f"warning: {w}", file=sys.stderr)
+    print(f"polled {args.source}: emitted {emitted} signal(s)")
+    return 0
+
+
 def cmd_rm(args: argparse.Namespace) -> int:
     store = _store_from_args(args)
     tasks = store.load_tasks()
@@ -159,6 +180,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     tk = sub.add_parser("tick", help="Recompute priorities; print new order.")
     tk.set_defaults(func=cmd_tick)
+
+    pl = sub.add_parser(
+        "poll",
+        help="Invoke a network-bound signal source's poller.",
+    )
+    pl.add_argument(
+        "source",
+        help=f"Signal source to poll. Known: {', '.join(sorted(POLLERS))}.",
+    )
+    pl.set_defaults(func=cmd_poll)
 
     rm = sub.add_parser("rm", help="Remove a task by id.")
     rm.add_argument("id")

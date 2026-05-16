@@ -82,12 +82,19 @@ Built-in rules for v0.1:
 
 Future rules:
 
-- `ci_failing`: if a `github-ci` signal targets this task and is
-  failing, +50.
 - `cost_pressure`: if a `runpod-cost` signal reports an idle pod tagged
   with this task's tag, +100 (drain it).
 - `stale_pr`: if a `github-pr` signal reports a PR sitting unreviewed
   for >24h, +20.
+
+### Shipped in v0.3
+
+- `ci_failing`: +50 when a fresh `github-ci` signal targeting the task
+  reports `state == "failure"`. The companion signal source
+  `triage.sources.github_ci` polls GitHub Actions for tasks tagged
+  `gh-ci:owner/repo@branch` and emits one signal per matching task.
+  Invoked manually via `triage poll github-ci` (not auto-emitted on
+  `triage tick` because it's network-bound).
 
 ### Priority
 
@@ -173,7 +180,7 @@ explainable.
 |---------|---------------------------------------------------------------|----------|
 | v0.1    | scaffold, three rules, cron-window signal, CLI                | shipped  |
 | v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
-| v0.3    | `github-ci` signal source + rule                              | planned  |
+| v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
 | v0.4    | `runpod-cost` signal source + rule (drain-idle-pods pressure) | planned  |
 | v0.5    | `github-pr` stale-PR signal source                            | planned  |
 | v0.6    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
