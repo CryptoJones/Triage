@@ -11,11 +11,12 @@ from typing import Sequence
 
 from . import __version__, cron, log_writer, scheduler, theme
 from .model import Task
-from .sources import github_ci, runpod
+from .sources import github_ci, github_pr, runpod
 from .store import Store
 
 POLLERS: dict[str, callable] = {
     "github-ci": lambda store: github_ci.poll(store),
+    "github-pr": lambda store: github_pr.poll(store),
     "runpod-cost": lambda store: runpod.poll(store),
 }
 

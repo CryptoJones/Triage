@@ -96,12 +96,29 @@ def rule_cost_pressure(task: Task, signals: list[Signal]) -> int:
     return 0
 
 
+def rule_stale_pr(task: Task, signals: list[Signal]) -> int:
+    """+20 if a fresh github-pr signal targeting this task is 'stale'.
+
+    "stale" = open PR whose updated_at is older than 24h. The bump
+    nudges the queue toward chasing review on PRs that have gone cold.
+    """
+    for sig in signals:
+        if sig.source != "github-pr":
+            continue
+        if sig.affects and task.id not in sig.affects:
+            continue
+        if sig.payload.get("state") == "stale":
+            return 20
+    return 0
+
+
 DEFAULT_RULES: list[tuple[str, RuleFn]] = [
     ("base_score", rule_base_score),
     ("deadline_decay", rule_deadline_decay),
     ("cron_window_active", rule_cron_window_active),
     ("ci_failing", rule_ci_failing),
     ("cost_pressure", rule_cost_pressure),
+    ("stale_pr", rule_stale_pr),
 ]
 
 
