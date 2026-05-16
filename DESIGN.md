@@ -181,11 +181,12 @@ explainable.
 | v0.1    | scaffold, three rules, cron-window signal, CLI                | shipped  |
 | v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
 | v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
-| v0.4    | `runpod-cost` signal source + rule (drain-idle-pods pressure) | planned  |
-| v0.5    | `github-pr` stale-PR signal source                            | planned  |
-| v0.6    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
+| v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
+| v0.5    | `runpod-cost` signal source + rule (drain-idle-pods pressure) | planned  |
+| v0.6    | `github-pr` stale-PR signal source                            | planned  |
+| v0.7    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
 |         | recommended reorder for confirmation                          |          |
-| v0.7    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
+| v0.8    | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
 
 ---
 

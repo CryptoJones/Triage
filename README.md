@@ -52,6 +52,30 @@ pip install -e .
 
 Pure Python stdlib — no runtime dependencies.
 
+## Themes
+
+Triage ships three CLI themes:
+
+| Name     | Aesthetic                                                            |
+|----------|----------------------------------------------------------------------|
+| `bbs`    | **Default** — 1990s BBS: bright magenta banners, double-line box-drawing (`╔═╗`), block-character priority bars (`█▒░`), color-banded priorities. |
+| `modern` | Subtle palette, single-line boxes (`┌─┐`), dot-fill bars (`█▒·`).   |
+| `mono`   | No color, ASCII-only (`+-+`, `#=.`) — safe for pipes / dumb terminals. |
+
+Select with `--theme NAME` (per invocation) or `TRIAGE_THEME=NAME` (per shell). Color follows the standards:
+
+- Auto-disabled when stdout isn't a TTY (e.g. piped to a file).
+- `NO_COLOR=1` disables color regardless of theme (per [no-color.org](https://no-color.org/)).
+- `FORCE_COLOR=1` enables color even when not a TTY.
+- `--no-color` flag = explicit per-invocation kill switch.
+
+Preview a theme without committing tasks:
+
+```bash
+triage theme               # list available
+triage theme --name bbs    # render sample rows
+```
+
 ## Usage
 
 ```bash
