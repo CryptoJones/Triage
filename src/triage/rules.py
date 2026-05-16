@@ -63,10 +63,23 @@ def rule_cron_window_active(task: Task, signals: list[Signal]) -> int:
     return 0
 
 
+def rule_ci_failing(task: Task, signals: list[Signal]) -> int:
+    """+50 if a fresh github-ci signal targeting this task reports failure."""
+    for sig in signals:
+        if sig.source != "github-ci":
+            continue
+        if sig.affects and task.id not in sig.affects:
+            continue
+        if sig.payload.get("state") == "failure":
+            return 50
+    return 0
+
+
 DEFAULT_RULES: list[tuple[str, RuleFn]] = [
     ("base_score", rule_base_score),
     ("deadline_decay", rule_deadline_decay),
     ("cron_window_active", rule_cron_window_active),
+    ("ci_failing", rule_ci_failing),
 ]
 
 

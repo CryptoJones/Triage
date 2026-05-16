@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from triage.model import Signal, Task
 from triage.rules import (
     rule_base_score,
+    rule_ci_failing,
     rule_cron_window_active,
     rule_deadline_decay,
     score,
@@ -73,5 +74,74 @@ def test_score_composes_rules_additively_with_named_contributions():
     total, contribs = score(t, [])
     assert total == 10
     names = [c.name for c in contribs]
-    assert names == ["base_score", "deadline_decay", "cron_window_active"]
+    assert names == ["base_score", "deadline_decay", "cron_window_active", "ci_failing"]
     assert sum(c.delta for c in contribs) == total
+
+
+def test_ci_failing_zero_when_no_signal():
+    assert rule_ci_failing(Task(id="A", subject="a"), []) == 0
+
+
+def test_ci_failing_bumps_on_matching_failure_signal():
+    from datetime import datetime, timezone
+
+    from triage.model import Signal
+
+    fresh = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    t = Task(id="A", subject="a")
+    sig = Signal(
+        source="github-ci",
+        captured_at=fresh,
+        payload={"state": "failure"},
+        affects=["A"],
+    )
+    assert rule_ci_failing(t, [sig]) == 50
+
+
+def test_ci_failing_zero_on_success_or_in_progress():
+    from datetime import datetime, timezone
+
+    from triage.model import Signal
+
+    fresh = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    t = Task(id="A", subject="a")
+    for state in ["success", "in_progress", "unknown"]:
+        sig = Signal(
+            source="github-ci",
+            captured_at=fresh,
+            payload={"state": state},
+            affects=["A"],
+        )
+        assert rule_ci_failing(t, [sig]) == 0
+
+
+def test_ci_failing_ignores_other_task_signals():
+    from datetime import datetime, timezone
+
+    from triage.model import Signal
+
+    fresh = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    t = Task(id="A", subject="a")
+    sig = Signal(
+        source="github-ci",
+        captured_at=fresh,
+        payload={"state": "failure"},
+        affects=["OTHER"],
+    )
+    assert rule_ci_failing(t, [sig]) == 0
+
+
+def test_ci_failing_ignores_wrong_source():
+    from datetime import datetime, timezone
+
+    from triage.model import Signal
+
+    fresh = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    t = Task(id="A", subject="a")
+    sig = Signal(
+        source="cron",
+        captured_at=fresh,
+        payload={"state": "failure"},
+        affects=["A"],
+    )
+    assert rule_ci_failing(t, [sig]) == 0
