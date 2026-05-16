@@ -1,107 +1,181 @@
-# Triage
+<div align="center">
 
-A meta-scheduler that watches signals about the world and reorders its
-own priority queue accordingly. The human sets the goals; Triage decides
-the order.
+```
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║                    T  R  I  A  G  E                          ║
+║                                                              ║
+║          meta-scheduler that watches its own queue           ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**A self-aware priority queue.** Signals push facts about the world;
+rules turn facts into priority deltas; the queue reorders itself on
+every tick. You set the goals — Triage decides the order, and tells
+you exactly why.
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?logo=apache)](LICENSE)
+[![Stdlib only](https://img.shields.io/badge/deps-stdlib_only-success?logo=python&logoColor=white)](pyproject.toml)
 [![Codeberg](https://img.shields.io/badge/Codeberg-CryptoJones%2FTriage-2185D0?logo=codeberg&logoColor=white)](https://codeberg.org/CryptoJones/Triage)
 [![GitHub](https://img.shields.io/badge/GitHub-CryptoJones%2FTriage-181717?logo=github&logoColor=white)](https://github.com/CryptoJones/Triage)
 
+</div>
+
 > Mirrored on both [GitHub](https://github.com/CryptoJones/Triage) and
 > [Codeberg](https://codeberg.org/CryptoJones/Triage). Issues filed on
-> either are welcome; commits are pushed to both.
+> either forge are welcome; commits land on both.
 
 ---
 
-## What it does
+## What you see
 
-Human-curated priority queues drift. The #3 task yesterday might be #1
-today because staging is on fire, a token is about to expire, or a
-$40/hr GPU pod is idle. Manually keeping a queue accurate is its own
-job.
+```
+╔════════════════════════════════════════════════════════╗
+║                  T R I A G E   v0.4.0                  ║
+╚════════════════════════════════════════════════════════╝
+  ID               PRI  BAR    SUBJECT
+  ════════════  ══════  ═════  ════════════════════════════════════════
+  7cfa440bc639  [ 101]  █████  Fix the linter        ← blocker auto-bumped
+  f35d7cea6b7d  [ 100]  █████  Add feature X         ← blocked-by linter
+  19c80b807ddd  [  35]  █▒░░░  Rotate cert           ← deadline pressure
+  abc123456789  [   2]  ░░░░░  Routine cleanup
+```
 
-Triage closes the loop:
+In a real terminal the banner is bright magenta, the priorities are
+color-banded (high = yellow, mid = green, low = dim cyan), and the
+priority bars fill in proportionally. The default `bbs` theme is
+unapologetically 1990s.
 
-1. **Signal sources** push facts (cron windows, CI status, cost
-   pressure, deadlines).
-2. **Rules** turn facts into priority deltas.
+---
+
+## How it works
+
+```
+                   ┌─────────────────────┐
+   signals  ─────► │   Signal sources    │  (cron-window, github-ci, ...)
+                   └──────────┬──────────┘
+                              ▼
+                   ┌─────────────────────┐
+                   │  ~/.triage/state/   │  (append-only JSONL per source)
+                   └──────────┬──────────┘
+                              ▼
+   tick     ─────► ┌─────────────────────┐ ─────► reordered queue
+                   │  Triage scheduler   │        + per-task audit log
+                   └──────────┬──────────┘
+                              ▼
+                   ┌─────────────────────┐
+   tasks    ─────► │     triage CLI      │
+                   └─────────────────────┘
+```
+
+1. **Signal sources** push facts (`cron-window`, `github-ci`, future
+   `runpod-cost`, `github-pr`...).
+2. **Rules** turn facts into priority deltas
+   (`base_score`, `deadline_decay`, `cron_window_active`,
+   `ci_failing`, `blocker_transitive`).
 3. **The queue reorders** on every `triage tick`.
+4. **Every reorder is explainable** — `triage why <id>` shows
+   exactly which rules contributed which deltas, so the order is
+   never a black box.
 
-Every reorder is explainable — `triage why <id>` shows exactly which
-rules contributed which deltas.
+See [`DESIGN.md`](DESIGN.md) for the full architecture, the rule
+catalog, and the roadmap.
 
-See [`DESIGN.md`](DESIGN.md) for the architecture, signal model, and
-rule catalog.
+---
 
 ## Install
 
 ```bash
-git clone https://github.com/CryptoJones/Triage
+git clone https://github.com/CryptoJones/Triage      # or codeberg.org/CryptoJones/Triage
 cd Triage
 pip install -e .
 ```
 
-Or via Codeberg:
+Pure Python stdlib. No runtime dependencies. Tested on 3.10 / 3.11 / 3.12.
 
-```bash
-git clone https://codeberg.org/CryptoJones/Triage
-cd Triage
-pip install -e .
-```
-
-Pure Python stdlib — no runtime dependencies.
-
-## Themes
-
-Triage ships three CLI themes:
-
-| Name     | Aesthetic                                                            |
-|----------|----------------------------------------------------------------------|
-| `bbs`    | **Default** — 1990s BBS: bright magenta banners, double-line box-drawing (`╔═╗`), block-character priority bars (`█▒░`), color-banded priorities. |
-| `modern` | Subtle palette, single-line boxes (`┌─┐`), dot-fill bars (`█▒·`).   |
-| `mono`   | No color, ASCII-only (`+-+`, `#=.`) — safe for pipes / dumb terminals. |
-
-Select with `--theme NAME` (per invocation) or `TRIAGE_THEME=NAME` (per shell). Color follows the standards:
-
-- Auto-disabled when stdout isn't a TTY (e.g. piped to a file).
-- `NO_COLOR=1` disables color regardless of theme (per [no-color.org](https://no-color.org/)).
-- `FORCE_COLOR=1` enables color even when not a TTY.
-- `--no-color` flag = explicit per-invocation kill switch.
-
-Preview a theme without committing tasks:
-
-```bash
-triage theme               # list available
-triage theme --name bbs    # render sample rows
-```
+---
 
 ## Usage
 
+### Tasks
+
 ```bash
-# Add tasks
 triage add "Fix the auth bug" --base-score 10
 triage add "Rotate the staging cert" --deadline 2026-05-20T00:00:00Z
+triage add "Weekday-only chore" --cron-window "* 9-17 * * 1-5"
+triage add "Watch CI"          --tag "gh-ci:CryptoJones/Triage@main"
+triage add "Wait on linter"    --blocked-by <linter-task-id>
 
-# Inspect
-triage list                    # current order
-triage show <id>               # one task + active rule contributions
-triage why <id>                # audit log: which rules pushed it where
-
-# Recompute (call this from cron / a shell loop / ScheduleWakeup)
-triage tick
-
-# Cleanup
-triage rm <id>
+triage list                     # current priority order
+triage show <id>                # the raw task record (JSON)
+triage why  <id>                # which rules contributed which deltas
+triage rm   <id>                # remove
 ```
 
-## Companion: TaskPriorityReorder
+### Reorder + poll
 
-[claude-skill-TaskPriorityReorder](https://github.com/CryptoJones/claude-skill-TaskPriorityReorder)
-is the manual override — a Claude Code skill that re-orders the queue
-when a human says "bump X to top". Triage is the automatic version.
-They share the same primitive: stable identity per task plus a
-recomputable priority.
+```bash
+triage tick                     # recompute priorities; print new order
+triage poll github-ci           # invoke a network-bound signal source
+```
+
+`tick` is cheap, local, and idempotent — call it from cron, a shell
+loop, or Claude Code's `ScheduleWakeup`. `poll` is for signal sources
+that hit the network (you pay for those explicitly).
+
+### Themes
+
+```bash
+triage theme                    # list available themes
+triage theme --name bbs         # render sample rows
+triage --theme modern list      # one-shot theme override
+TRIAGE_THEME=mono triage list   # per-shell theme
+```
+
+| Theme    | Aesthetic                                                              |
+|----------|------------------------------------------------------------------------|
+| `bbs`    | **Default.** 1990s BBS: bright magenta, double-line box (`╔═╗`), block bars. |
+| `modern` | Subtle palette, single-line boxes (`┌─┐`), dot-fill bars (`█▒·`).    |
+| `mono`   | No color, ASCII-only (`+-+`, `#=.`) — safe for pipes / dumb terminals. |
+
+Color follows the standards:
+
+- Auto-disabled when stdout isn't a TTY.
+- `NO_COLOR=1` disables color (per [no-color.org](https://no-color.org/)).
+- `FORCE_COLOR=1` enables color on non-TTY.
+- `--no-color` flag = explicit per-invocation kill switch.
+
+---
+
+## Companion skill
+
+[**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage)
+is the Claude Code skills repository for this project. It currently
+ships `TaskPriorityReorder` — the **manual override** for when a human
+just wants to bump a task to the top of Claude Code's task list — and
+will host the `triage` skill (the automatic, signal-driven counterpart)
+at Triage v0.7.
+
+The two skills share Triage's stable-id-plus-recomputable-priority
+primitive.
+
+---
+
+## Status
+
+| Version | Feature                                                       | Status   |
+|---------|---------------------------------------------------------------|----------|
+| v0.1    | scaffold, three rules, cron-window signal, CLI                | shipped  |
+| v0.2    | `blocker_transitive` propagation + cycle detection            | shipped  |
+| v0.3    | `github-ci` signal source + `ci_failing` rule + `triage poll` | shipped  |
+| v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
+| v0.5    | `runpod-cost` signal source + drain-idle-pods rule            | planned  |
+| v0.6    | `github-pr` stale-PR signal source                            | planned  |
+| v0.7    | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
+| v0.8    | `triage watch` long-running mode + systemd unit               | planned  |
+
+---
 
 ## License
 
