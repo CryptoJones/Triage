@@ -134,6 +134,58 @@ def list_available() -> list[tuple[str, str]]:
     return out
 
 
+_PLACEHOLDER_RE = __import__("re").compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+
+
+def _placeholders(s: str) -> set[str]:
+    return set(_PLACEHOLDER_RE.findall(s))
+
+
+def check_locales() -> dict[str, dict[str, list]]:
+    """Compare every non-English locale against the English baseline.
+
+    Returns a dict ``{lang_code: {missing: [...], extra: [...], placeholder_mismatches: [...]}}``
+    for every locale that has at least one issue. Empty dict = clean.
+
+    - ``missing``    keys in en.STRINGS not present in <lang>.STRINGS
+    - ``extra``      keys in <lang>.STRINGS not present in en.STRINGS
+                     (excludes ``__native_name__`` which is locale-only)
+    - ``placeholder_mismatches`` list of ``(key, en_placeholders, lang_placeholders)``
+      tuples where the ``{name}`` placeholder set diverges from English.
+    """
+    from .locales import en as _en  # local import keeps top of file clean
+
+    en_keys = set(_en.STRINGS.keys())
+    report: dict[str, dict[str, list]] = {}
+
+    for code, catalog in LOCALES.items():
+        if code == DEFAULT_LANG:
+            continue
+        lang_keys = set(catalog.keys())
+        missing = sorted(en_keys - lang_keys)
+        extra = sorted(lang_keys - en_keys - {"__native_name__"})
+
+        placeholder_mismatches: list[tuple[str, list[str], list[str]]] = []
+        for key, en_text in _en.STRINGS.items():
+            if key not in catalog:
+                continue
+            en_ph = _placeholders(en_text)
+            tr_ph = _placeholders(catalog[key])
+            if en_ph != tr_ph:
+                placeholder_mismatches.append(
+                    (key, sorted(en_ph), sorted(tr_ph))
+                )
+
+        if missing or extra or placeholder_mismatches:
+            report[code] = {
+                "missing": missing,
+                "extra": extra,
+                "placeholder_mismatches": placeholder_mismatches,
+            }
+
+    return report
+
+
 def reset_for_test() -> None:
     """Reset module-level state. Used by tests."""
     global _resolved_lang, _strings, _misses_logged

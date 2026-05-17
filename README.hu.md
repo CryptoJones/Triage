@@ -52,7 +52,7 @@ dönti el a sorrendet, és pontosan elmondja, miért.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    TÁRGY
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -249,9 +249,13 @@ prioritás), és kettős tükörben él (GitHub + Codeberg).
 | v0.4   | BBS-stílusú ANSI-témarendszer + `triage theme` alparancs           | kiadva    |
 | v0.5   | `runpod-cost`-jelzésforrás + `cost_pressure`-szabály               | kiadva    |
 | v0.6   | JSONL eseménynaplóíró külső ágenseknek                             | kiadva    |
-| v0.7   | `github-pr` jelzésforrás elavult PR-okra                           | tervezett |
-| v0.8   | Claude Code `triage`-skill (a `claude_skill-Triage` repóban)       | tervezett |
-| v0.9   | hosszan futó `triage watch`-mód + systemd-egység                   | tervezett |
+| v0.7   | `github-pr` jelzésforrás + szabály `rule_stale_pr`                 | kiadva    |
+| v0.8   | `triage signal` CLI + szabály `manual_bump` + RunPodBoss-integráció | kiadva    |
+| v0.8.1 | `triage status` egyképernyős áttekintés                            | kiadva    |
+| v0.9   | i18n alap — `--lang` kapcsoló + en/es/fr nyelvek                   | kiadva    |
+| v0.10  | i18n teljes — 17 nyelv + regresszió-detektor `triage lang --check` | kiadva    |
+| —      | Claude Code `triage`-skill (a `claude_skill-Triage` repóban)       | tervezett |
+| —      | hosszan futó `triage watch`-mód + systemd-egység                   | tervezett |
 
 ---
 

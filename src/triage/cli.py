@@ -465,6 +465,27 @@ def cmd_theme(args: argparse.Namespace) -> int:
 
 def cmd_lang(args: argparse.Namespace) -> int:
     """List available output languages (or switch via --lang on any command)."""
+    if getattr(args, "check", False):
+        report = i18n.check_locales()
+        if not report:
+            print(f"OK: all {len(i18n.list_available()) - 1} non-English locales match the English baseline.")
+            return 0
+        for code in sorted(report):
+            issues = report[code]
+            print(f"locale {code!r}:")
+            if issues["missing"]:
+                print(f"  missing keys ({len(issues['missing'])}):")
+                for key in issues["missing"]:
+                    print(f"    - {key!r}")
+            if issues["extra"]:
+                print(f"  extra keys ({len(issues['extra'])}):")
+                for key in issues["extra"]:
+                    print(f"    + {key!r}")
+            if issues["placeholder_mismatches"]:
+                print(f"  placeholder mismatches ({len(issues['placeholder_mismatches'])}):")
+                for key, en_ph, tr_ph in issues["placeholder_mismatches"]:
+                    print(f"    {key!r}: en={en_ph} vs {code}={tr_ph}")
+        return 1
     print(_("available languages (default: {default}):", default=i18n.DEFAULT_LANG))
     for code, native in i18n.list_available():
         marker = " *" if code == i18n.DEFAULT_LANG else "  "
@@ -623,6 +644,14 @@ def build_parser() -> argparse.ArgumentParser:
     th.set_defaults(func=cmd_theme)
 
     lng = sub.add_parser("lang", help=_("List available output languages."))
+    lng.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "Audit every locale against the English baseline. "
+            "Exits non-zero if any locale has missing/extra keys or placeholder mismatches."
+        ),
+    )
     lng.set_defaults(func=cmd_lang)
 
     return p

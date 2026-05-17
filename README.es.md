@@ -52,7 +52,7 @@ los objetivos — Triage decide el orden y te explica exactamente por qué.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    ASUNTO
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -249,9 +249,13 @@ recomputable) y se publican en doble espejo (GitHub + Codeberg).
 | v0.4    | tema ANSI estilo BBS + subcomando `triage theme`                     | publicada |
 | v0.5    | fuente de señal `runpod-cost` + regla `cost_pressure`                | publicada |
 | v0.6    | escritor de registro de eventos JSONL para agentes externos          | publicada |
-| v0.7    | fuente de señal `github-pr` para PRs obsoletos                       | planeada  |
-| v0.8    | skill `triage` de Claude Code (en el repo `claude_skill-Triage`)     | planeada  |
-| v0.9    | modo `triage watch` de larga ejecución + unidad systemd              | planeada  |
+| v0.7    | fuente de señal `github-pr` + regla `rule_stale_pr`                  | publicada |
+| v0.8    | CLI `triage signal` + regla `manual_bump` + integración RunPodBoss   | publicada |
+| v0.8.1  | resumen de un vistazo `triage status`                                | publicada |
+| v0.9    | base de i18n — opción `--lang` + locales en/es/fr                    | publicada |
+| v0.10   | i18n completa — 17 locales + detector de regresiones `triage lang --check` | publicada |
+| —       | skill `triage` de Claude Code (en el repo `claude_skill-Triage`)     | planeada  |
+| —       | modo `triage watch` de larga ejecución + unidad systemd              | planeada  |
 
 ---
 

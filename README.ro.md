@@ -51,7 +51,7 @@ obiectivele — Triage decide ordinea și îți spune exact de ce.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUBIECT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -249,9 +249,13 @@ recalculabilă) și trăiesc pe oglinzi duble (GitHub + Codeberg).
 | v0.4     | sistem de teme ANSI în stil BBS + subcomanda `triage theme`        | lansată    |
 | v0.5     | sursă de semnal `runpod-cost` + regulă `cost_pressure`             | lansată    |
 | v0.6     | scriitor de jurnal de evenimente JSONL pentru agenți externi       | lansată    |
-| v0.7     | sursă de semnal `github-pr` pentru PR-uri învechite                | planificată |
-| v0.8     | skill `triage` Claude Code (în repo-ul `claude_skill-Triage`)      | planificată |
-| v0.9     | modul lung-durată `triage watch` + unitate systemd                 | planificată |
+| v0.7     | sursă de semnal `github-pr` + regulă `rule_stale_pr`               | lansată     |
+| v0.8     | CLI `triage signal` + regulă `manual_bump` + integrare RunPodBoss  | lansată     |
+| v0.8.1   | rezumat pe un singur ecran `triage status`                         | lansată     |
+| v0.9     | bază i18n — opțiune `--lang` + locale en/es/fr                     | lansată     |
+| v0.10    | i18n completă — 17 locale + detector de regresii `triage lang --check` | lansată     |
+| —        | skill `triage` Claude Code (în repo-ul `claude_skill-Triage`)      | planificată |
+| —        | modul lung-durată `triage watch` + unitate systemd                 | planificată |
 
 ---
 
