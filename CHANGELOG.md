@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+- Claude Code `triage` skill in `claude_skill-Triage/triage/`
+  (wraps `triage tick` + `triage list --json` + `triage why <id>`,
+  surfaces top-N tasks with rule contributions; operator confirms
+  before any reorder).
+- `triage watch` long-running mode + `examples/triage.service`
+  systemd unit.
+
+---
+
+## [0.11.1] — 2026-05-17
+
+Patch release. Adds the `triage doctor` env-diagnostics subcommand
+that started life as a "small bug-report helper" and turned out to
+be genuinely useful enough to flush into a tagged version.
+
 ### Added
 - **`triage doctor`** — one-screen, read-only environment-diagnostics
   subcommand. Reports version, Python version, resolved locale +
@@ -15,13 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   log path, and locale-catalog drift count. Plain text or `--json`.
   Designed for paste-into-bug-reports use.
 
-### Planned
-- Claude Code `triage` skill in `claude_skill-Triage/triage/`
-  (wraps `triage tick` + `triage list --json` + `triage why <id>`,
-  surfaces top-N tasks with rule contributions; operator confirms
-  before any reorder).
-- `triage watch` long-running mode + `examples/triage.service`
-  systemd unit.
+### Docs
+- Surfaced `triage doctor` in `README.md` (new `### Diagnostics`
+  block under Usage) and `examples/i18n-recipes.md` (new recipe #6
+  showing how to use `source` field for locale debugging).
+- README banner ticked v0.11.0 → v0.11.1; English README only.
+  Translated READMEs intentionally lag — v0.11.x is invisible-to-
+  reader CLI polish, not new user-facing surface.
 
 ---
 
@@ -329,6 +345,7 @@ that's runnable outside the test harness.
 - 39 tests across model, store, rules, scheduler, cron, cli.
 - GitHub Actions + Codeberg Woodpecker pipelines.
 
+[0.11.1]: https://github.com/CryptoJones/Triage/releases/tag/v0.11.1
 [0.11.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.11.0
 [0.10.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.10.0
 [0.9.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.9.0
