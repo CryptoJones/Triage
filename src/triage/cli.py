@@ -374,7 +374,11 @@ def cmd_status(args: argparse.Namespace) -> int:
         }, indent=2, sort_keys=True))
         return 0
 
-    _print_banner(t, enabled=color, title=_("T R I A G E   S T A T U S"))
+    _print_banner(
+        t,
+        enabled=color,
+        title=_("T R I A G E   S T A T U S") + f"   v{__version__}",
+    )
 
     print(theme.paint("  " + _("TOP 3"), t.header, enabled=color))
     print(theme.paint("  " + t.rule * 56, t.dim, enabled=color))
