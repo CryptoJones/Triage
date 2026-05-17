@@ -52,7 +52,7 @@ Triage decide l'ordine e ti spiega esattamente perché.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    OGGETTO
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -158,7 +158,9 @@ triage lang                     # elenca le lingue disponibili
 ```
 
 Lingue supportate: English, Español, Français, Deutsch, Italiano,
-Português. Le lingue sconosciute ripiegano sull'inglese.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Le lingue sconosciute ripiegano
+sull'inglese.
 
 ### Registro eventi (per agenti esterni)
 

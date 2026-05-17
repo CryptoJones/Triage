@@ -53,7 +53,7 @@ porquê.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    ASSUNTO
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -159,7 +159,8 @@ triage lang                     # lista os idiomas disponíveis
 ```
 
 Idiomas suportados: English, Español, Français, Deutsch, Italiano,
-Português. Idiomas desconhecidos recorrem ao inglês.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Idiomas desconhecidos recorrem ao inglês.
 
 ### Registo de eventos (para agentes externos)
 

@@ -51,7 +51,7 @@ obiectivele — Triage decide ordinea și îți spune exact de ce.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUBIECT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -157,8 +157,8 @@ triage lang                     # listează limbile disponibile
 
 Limbi acceptate: English, Español, Français, Deutsch, Italiano,
 Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
-Română, Magyar, Türkçe. Dacă limba nu este recunoscută, se folosește
-engleza ca rezervă.
+Română, Magyar, Türkçe, Català. Dacă limba nu este recunoscută, se
+folosește engleza ca rezervă.
 
 ### Jurnal de evenimente (pentru agenți externi)
 

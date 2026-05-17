@@ -50,7 +50,7 @@ you exactly why.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUBJECT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -141,6 +141,22 @@ triage poll github-ci           # invoke a network-bound signal source
 `tick` is cheap, local, and idempotent — call it from cron, a shell
 loop, or Claude Code's `ScheduleWakeup`. `poll` is for signal sources
 that hit the network (you pay for those explicitly).
+
+### Language
+
+Triage speaks several languages. Set the language with the `--lang`
+flag or the usual environment variables:
+
+```bash
+triage --lang es list           # one-shot
+TRIAGE_LANG=es triage list      # per-shell
+triage lang                     # list available languages
+triage lang --check             # release-gate: report any locale drift
+```
+
+Supported languages: English, Español, Français, Deutsch, Italiano,
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Unknown languages fall back to English.
 
 ### Event log (for external agents)
 

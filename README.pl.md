@@ -51,7 +51,7 @@ Triage decyduje o kolejności i mówi ci dokładnie dlaczego.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    TEMAT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -156,8 +156,9 @@ triage lang                     # wypisz dostępne języki
 ```
 
 Obsługiwane języki: English, Español, Français, Deutsch, Italiano,
-Português, Nederlands, Polski, Čeština. Jeśli język nie jest
-rozpoznany, jako zapasowy używany jest angielski.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Jeśli język nie jest rozpoznany, jako
+zapasowy używany jest angielski.
 
 ### Dziennik zdarzeń (dla zewnętrznych agentów)
 

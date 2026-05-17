@@ -52,7 +52,7 @@ genau warum.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAL    BETREFF
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -158,7 +158,9 @@ triage lang                     # listet verfügbare Sprachen
 ```
 
 Unterstützte Sprachen: English, Español, Français, Deutsch, Italiano,
-Português. Unbekannte Sprachen fallen auf Englisch zurück.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Unbekannte Sprachen fallen auf
+Englisch zurück.
 
 ### Ereignisprotokoll (für externe Agenten)
 

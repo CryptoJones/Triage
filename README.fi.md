@@ -51,7 +51,7 @@ päättää järjestyksen ja kertoo tarkasti miksi.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    AIHE
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -157,8 +157,9 @@ triage lang                     # listaa käytettävissä olevat kielet
 ```
 
 Tuetut kielet: English, Español, Français, Deutsch, Italiano,
-Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi.
-Jos kieltä ei tunnisteta, käytetään englantia varavaihtoehtona.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Jos kieltä ei tunnisteta, käytetään
+englantia varavaihtoehtona.
 
 ### Tapahtumaloki (ulkoisille agenteille)
 

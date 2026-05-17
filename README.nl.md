@@ -51,7 +51,7 @@ de volgorde, en vertelt je precies waarom.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    ONDERWERP
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -156,8 +156,9 @@ triage lang                     # beschikbare talen opsommen
 ```
 
 Ondersteunde talen: English, Español, Français, Deutsch, Italiano,
-Português, Nederlands, Polski, Čeština. Als de taal niet wordt
-herkend, wordt Engels als terugval gebruikt.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Als de taal niet wordt herkend, wordt
+Engels als terugval gebruikt.
 
 ### Gebeurtenislogboek (voor externe agents)
 

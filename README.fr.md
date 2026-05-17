@@ -53,7 +53,7 @@ et vous explique précisément pourquoi.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUJET
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -159,7 +159,9 @@ triage lang                     # liste les langues disponibles
 ```
 
 Langues prises en charge : English, Español, Français, Deutsch,
-Italiano, Português. Toute langue non reconnue retombe sur l'anglais.
+Italiano, Português, Nederlands, Polski, Čeština, Svenska, Norsk,
+Dansk, Suomi, Română, Magyar, Türkçe, Català. Toute langue non
+reconnue retombe sur l'anglais.
 
 ### Journal d'événements (pour les agents externes)
 
