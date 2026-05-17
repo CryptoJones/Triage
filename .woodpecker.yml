@@ -8,3 +8,9 @@ steps:
     commands:
       - pip install -e '.[dev]'
       - pytest -v
+
+  lang_check:
+    image: python:3.11-slim
+    commands:
+      - pip install -e .
+      - triage lang --check
