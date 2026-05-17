@@ -36,7 +36,8 @@ exakt varför.
 [Suomi](README.fi.md) ·
 [Română](README.ro.md) ·
 [Magyar](README.hu.md) ·
-[Türkçe](README.tr.md)
+[Türkçe](README.tr.md) ·
+[Català](README.ca.md)
 
 </div>
 

@@ -36,7 +36,8 @@ obiectivele — Triage decide ordinea și îți spune exact de ce.
 [Suomi](README.fi.md) ·
 **Română** ·
 [Magyar](README.hu.md) ·
-[Türkçe](README.tr.md)
+[Türkçe](README.tr.md) ·
+[Català](README.ca.md)
 
 </div>
 

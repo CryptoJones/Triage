@@ -36,7 +36,8 @@ dönti el a sorrendet, és pontosan elmondja, miért.
 [Suomi](README.fi.md) ·
 [Română](README.ro.md) ·
 **Magyar** ·
-[Türkçe](README.tr.md)
+[Türkçe](README.tr.md) ·
+[Català](README.ca.md)
 
 </div>
 
