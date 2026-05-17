@@ -30,7 +30,11 @@ porquê.
 **Português** ·
 [Nederlands](README.nl.md) ·
 [Polski](README.pl.md) ·
-[Čeština](README.cs.md)
+[Čeština](README.cs.md) ·
+[Svenska](README.sv.md) ·
+[Norsk](README.no.md) ·
+[Dansk](README.da.md) ·
+[Suomi](README.fi.md)
 
 </div>
 
