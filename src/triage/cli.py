@@ -469,8 +469,12 @@ def cmd_theme(args: argparse.Namespace) -> int:
 
 def cmd_lang(args: argparse.Namespace) -> int:
     """List available output languages (or switch via --lang on any command)."""
+    as_json = getattr(args, "json", False)
     if getattr(args, "check", False):
         report = i18n.check_locales()
+        if as_json:
+            print(json.dumps(report, indent=2, sort_keys=True))
+            return 0 if not report else 1
         if not report:
             print(f"OK: all {len(i18n.list_available()) - 1} non-English locales match the English baseline.")
             return 0
@@ -490,6 +494,17 @@ def cmd_lang(args: argparse.Namespace) -> int:
                 for key, en_ph, tr_ph in issues["placeholder_mismatches"]:
                     print(f"    {key!r}: en={en_ph} vs {code}={tr_ph}")
         return 1
+    if as_json:
+        out = {
+            "default": i18n.DEFAULT_LANG,
+            "active": i18n.current_lang(),
+            "languages": [
+                {"code": code, "native_name": native}
+                for code, native in i18n.list_available()
+            ],
+        }
+        print(json.dumps(out, indent=2, sort_keys=True))
+        return 0
     print(_("available languages (default: {default}):", default=i18n.DEFAULT_LANG))
     for code, native in i18n.list_available():
         marker = " *" if code == i18n.DEFAULT_LANG else "  "
@@ -654,6 +669,14 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Audit every locale against the English baseline. "
             "Exits non-zero if any locale has missing/extra keys or placeholder mismatches."
+        ),
+    )
+    lng.add_argument(
+        "--json",
+        action="store_true",
+        help=(
+            "Emit machine-parseable JSON instead of human-readable text. "
+            "Combines with --check to emit the drift report as a JSON dict."
         ),
     )
     lng.set_defaults(func=cmd_lang)
