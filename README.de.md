@@ -27,7 +27,10 @@ genau warum.
 [Français](README.fr.md) ·
 **Deutsch** ·
 [Italiano](README.it.md) ·
-[Português](README.pt.md)
+[Português](README.pt.md) ·
+[Nederlands](README.nl.md) ·
+[Polski](README.pl.md) ·
+[Čeština](README.cs.md)
 
 </div>
 
