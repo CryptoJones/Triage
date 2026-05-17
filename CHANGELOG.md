@@ -14,12 +14,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   before any reorder).
 - `triage watch` long-running mode + `examples/triage.service`
   systemd unit.
-- Model-layer error messages routed through `_()` so exception
-  messages also localize.
-- System-locale auto-detection on Windows
-  (`locale.getlocale()` fallback when `$LANG` is unset).
-- CI workflow (GitHub Actions + Codeberg Woodpecker) that runs
-  `triage lang --check` as a release gate, separately from `pytest`.
+- `triage doctor` — one-screen environment diagnostics (version,
+  resolved locale, store path, log path, `lang --check` status).
+
+---
+
+## [0.11.0] — 2026-05-16
+
+The post-i18n polish release. Locks down everything that grew out
+of v0.10 once the 17 locales actually landed and contributors
+started using them.
+
+### Added
+- **`locale.getlocale()` fallback** in `i18n.resolve_lang`. Windows
+  + bare POSIX shells (no `$LANG`) now get system-locale-driven
+  auto-detection instead of always falling back to English.
+- **`triage lang --json`** output mode. Without `--check`, emits the
+  available-languages list as a JSON object; with `--check`, emits
+  the drift report from `check_locales()` directly. CI tools can
+  now `jq` the result instead of regex-parsing the human text.
+- **`triage lang --check` runs as a CI gate** on both forges
+  (`.github/workflows/test.yml` + `.woodpecker.yml`) — locale drift
+  surfaces with its own red mark separately from pytest.
+- **Version stamp in `triage status` banner.** A one-screen status
+  snapshot now reports which version produced it.
+
+### Changed
+- **Model-layer error messages now route through `_()`.** Seven
+  previously hardcoded strings (cron.py × 1, scheduler.py × 3,
+  log_writer.py × 3) localize across all 17 catalogs.
+- README banner-width padding repaired across all 17 translations
+  after the v0.10 sed bump knocked the right `║` one column off.
+- All 17 README "Supported languages" in-prose lists now enumerate
+  the full Latin-script set (some were stuck at their iteration
+  batch's last entry).
+- Status tables across all 17 READMEs refreshed for v0.10/v0.11
+  reality.
+
+### Docs
+- `DESIGN.md` gained a top-level "Internationalization (i18n)"
+  section: catalog story, `_()` lookup, resolution precedence,
+  "add a locale" recipe, the release gate, and the smart-quote
+  gotcha.
+- `docs/i18n-data-format-comparison.md` — decision doc comparing
+  Python-module vs JSON vs YAML for locale data. Recommendation:
+  stay on Python until external translators start contributing.
+- `examples/i18n-recipes.md` — five copy-pasteable patterns
+  (forced lang, per-shell preference, system-locale auto, CI gate,
+  `TRIAGE_I18N_DEBUG`) plus the "what's NOT translated" list.
+- `examples/*.sh` audited end-to-end against the v0.10/v0.11 CLI:
+  no functional drift; minimum-version headers added to each.
+- `CHANGELOG.md` (this file) consolidated — i18n journey table
+  under v0.10, footer release-link backfill.
 
 ---
 
@@ -277,6 +323,7 @@ that's runnable outside the test harness.
 - 39 tests across model, store, rules, scheduler, cron, cli.
 - GitHub Actions + Codeberg Woodpecker pipelines.
 
+[0.11.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.11.0
 [0.10.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.10.0
 [0.9.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.9.0
 [0.8.1]: https://github.com/CryptoJones/Triage/releases/tag/v0.8.1
