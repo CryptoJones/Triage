@@ -14,9 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   before any reorder).
 - `triage watch` long-running mode + `examples/triage.service`
   systemd unit.
-- README localization proofreading polish.
-- Model-layer error messages routed through `_()`.
-- System-locale auto-detection on Windows.
+- Model-layer error messages routed through `_()` so exception
+  messages also localize.
+- System-locale auto-detection on Windows
+  (`locale.getlocale()` fallback when `$LANG` is unset).
+- CI workflow (GitHub Actions + Codeberg Woodpecker) that runs
+  `triage lang --check` as a release gate, separately from `pytest`.
 
 ---
 
@@ -39,6 +42,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Status tables in every README refreshed to reflect what has
   actually shipped through v0.10 (previously stale — claimed v0.7
   was planned despite shipping at `f4d6686`).
+- ASCII-art banner bumped to `v0.10.0` in every README; banner-box
+  width re-tightened to match the 56-column rule above/below
+  (post-bump polish that L8 closed).
+
+### Notes — i18n journey
+
+i18n shipped iteratively across nine loop iterations before being
+locked in as a milestone. For readers digging through git history:
+
+| Iteration | Scope                                                         | Landed at |
+|-----------|---------------------------------------------------------------|-----------|
+| L1        | Foundation: `_()` lookup, `--lang` flag, en/es/fr catalogs    | `a77eed1` |
+| L2        | de/it/pt + first wave of README translations                  | `f1e4c52` |
+| L3        | nl/pl/cs (Germanic + Slavic batch)                            | `7f34137` |
+| L4        | sv/no/da/fi (Nordic batch)                                    | `6d948ac` |
+| L5        | ro/hu/tr (Eastern-European batch)                             | `80ce829` |
+| L6        | ca — last Romance                                             | `0e93420` |
+| L7        | `lang --check` + v0.10.0 bump + Status-table refresh          | `168268e` |
+| L8        | Banner-width polish + 17-lang in-prose support-list audit     | `ff12490` |
+
+Catalogs live in `src/triage/locales/<code>.py`. The release gate
+is `triage lang --check`, which mirrors the `tests/test_i18n.py`
+catalog-completeness and placeholder-matching assertions in a form
+that's runnable outside the test harness.
 
 ---
 
@@ -250,6 +277,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 39 tests across model, store, rules, scheduler, cron, cli.
 - GitHub Actions + Codeberg Woodpecker pipelines.
 
+[0.10.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.10.0
+[0.9.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.9.0
+[0.8.1]: https://github.com/CryptoJones/Triage/releases/tag/v0.8.1
 [0.1.0]: https://github.com/CryptoJones/Triage/releases/tag/v0.1.0
 
 ---
