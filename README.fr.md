@@ -53,7 +53,7 @@ et vous explique précisément pourquoi.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUJET
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -244,15 +244,19 @@ recalculable) et vivent sur des miroirs doubles (GitHub + Codeberg).
 
 | Version | Fonctionnalité                                                            | État    |
 |---------|---------------------------------------------------------------------------|---------|
-| v0.1    | squelette, trois règles, signal cron-window, CLI                          | publié  |
-| v0.2    | propagation `blocker_transitive` + détection de cycles                    | publié  |
-| v0.3    | source de signal `github-ci` + règle `ci_failing` + `triage poll`         | publié  |
-| v0.4    | thème ANSI style BBS + sous-commande `triage theme`                       | publié  |
-| v0.5    | source de signal `runpod-cost` + règle `cost_pressure`                    | publié  |
-| v0.6    | écrivain de journal d'événements JSONL pour agents externes               | publié  |
-| v0.7    | source de signal `github-pr` pour PR obsolètes                            | prévu   |
-| v0.8    | skill `triage` Claude Code (dans le dépôt `claude_skill-Triage`)          | prévu   |
-| v0.9    | mode `triage watch` longue durée + unité systemd                          | prévu   |
+| v0.1    | squelette, trois règles, signal cron-window, CLI                          | publié    |
+| v0.2    | propagation `blocker_transitive` + détection de cycles                    | publié    |
+| v0.3    | source de signal `github-ci` + règle `ci_failing` + `triage poll`         | publié    |
+| v0.4    | thème ANSI style BBS + sous-commande `triage theme`                       | publié    |
+| v0.5    | source de signal `runpod-cost` + règle `cost_pressure`                    | publié    |
+| v0.6    | écrivain de journal d'événements JSONL pour agents externes               | publié    |
+| v0.7    | source de signal `github-pr` + règle `rule_stale_pr`                      | publié    |
+| v0.8    | CLI `triage signal` + règle `manual_bump` + intégration RunPodBoss        | publié    |
+| v0.8.1  | résumé sur un écran `triage status`                                       | publié    |
+| v0.9    | base d'i18n — option `--lang` + locales en/es/fr                          | publié    |
+| v0.10   | i18n complète — 17 locales + détecteur de régressions `triage lang --check` | publié    |
+| —       | skill `triage` Claude Code (dans le dépôt `claude_skill-Triage`)          | prévu     |
+| —       | mode `triage watch` longue durée + unité systemd                          | prévu     |
 
 ---
 

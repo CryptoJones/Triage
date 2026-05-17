@@ -50,7 +50,7 @@ you exactly why.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.4.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUBJECT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -229,9 +229,13 @@ and live on dual mirrors (GitHub + Codeberg).
 | v0.4    | BBS-style ANSI theme system + `triage theme` subcommand       | shipped  |
 | v0.5    | `runpod-cost` signal source + `cost_pressure` rule            | shipped  |
 | v0.6    | JSONL event log writer for external agents                    | shipped  |
-| v0.7    | `github-pr` stale-PR signal source                            | planned  |
-| v0.8    | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
-| v0.9    | `triage watch` long-running mode + systemd unit               | planned  |
+| v0.7    | `github-pr` stale-PR signal source + `rule_stale_pr`          | shipped  |
+| v0.8    | `triage signal` CLI + `manual_bump` rule + RunPodBoss eval    | shipped  |
+| v0.8.1  | `triage status` one-screen at-a-glance summary                | shipped  |
+| v0.9    | i18n foundation — `--lang` flag + en/es/fr baseline           | shipped  |
+| v0.10   | i18n complete — 17 locales + `triage lang --check` regression detector | shipped  |
+| —       | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
+| —       | `triage watch` long-running mode + systemd unit               | planned  |
 
 ---
 

@@ -8,12 +8,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- v0.9 — Claude Code `triage` skill in `claude_skill-Triage/triage/`
+- Claude Code `triage` skill in `claude_skill-Triage/triage/`
   (wraps `triage tick` + `triage list --json` + `triage why <id>`,
   surfaces top-N tasks with rule contributions; operator confirms
   before any reorder).
-- v0.10 — `triage watch` long-running mode + `examples/triage.service`
+- `triage watch` long-running mode + `examples/triage.service`
   systemd unit.
+- README localization proofreading polish.
+- Model-layer error messages routed through `_()`.
+- System-locale auto-detection on Windows.
+
+---
+
+## [0.10.0] — 2026-05-16
+
+### Added
+- **i18n complete.** Triage now ships with 17 Latin-script locale
+  catalogs: `en` (baseline), `es`, `fr`, `de`, `it`, `pt`, `nl`, `pl`,
+  `cs`, `sv`, `no`, `da`, `fi`, `ro`, `hu`, `tr`, `ca`. Every locale
+  passes the catalog-completeness and placeholder-matching tests.
+- **`triage lang --check`** subcommand. Audits every locale against
+  the English baseline and reports missing keys, extra keys, and
+  placeholder mismatches. Exits non-zero if any drift is found —
+  suitable for release-gate use in CI alongside `pytest`.
+- **17 README translations.** Every locale has a `README.<code>.md`
+  full translation; the "Read this in:" switcher is consistent across
+  all 17 docs.
+
+### Changed
+- Status tables in every README refreshed to reflect what has
+  actually shipped through v0.10 (previously stale — claimed v0.7
+  was planned despite shipping at `f4d6686`).
+
+---
+
+## [0.9.0] — 2026-05-16
+
+### Added
+- **i18n foundation.** Hand-rolled dict-based locale catalogs
+  (`src/triage/locales/<code>.py`), `_()` lookup with English
+  fallback, `--lang` CLI flag and `$TRIAGE_LANG` env var.
+- Locales shipped iteratively across loop iterations L1-L6 (en, es,
+  fr, de, it, pt, nl, pl, cs, sv, no, da, fi, ro, hu, tr, ca).
+- `triage lang` subcommand listing available languages with native
+  names + active marker.
+- Catalog-completeness and placeholder-matching tests gate every
+  locale on import.
+
+---
+
+## [0.8.1] — 2026-05-16
+
+### Added
+- `triage status` one-screen at-a-glance summary: top-3 tasks, tag
+  counts, signal counts.
 
 ---
 

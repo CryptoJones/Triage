@@ -51,7 +51,7 @@ pořadí a řekne ti přesně proč.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    PŘEDMĚT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -246,9 +246,13 @@ priorita) a žijí na dvojitých zrcadlech (GitHub + Codeberg).
 | v0.4  | systém ANSI témat ve stylu BBS + podpříkaz `triage theme`           | vydáno  |
 | v0.5  | zdroj signálu `runpod-cost` + pravidlo `cost_pressure`              | vydáno  |
 | v0.6  | zapisovač záznamu událostí JSONL pro externí agenty                 | vydáno  |
-| v0.7  | zdroj signálu `github-pr` pro zastaralé PR                          | plánováno |
-| v0.8  | skill `triage` Claude Code (v repu `claude_skill-Triage`)           | plánováno |
-| v0.9  | dlouho běžící režim `triage watch` + jednotka systemd               | plánováno |
+| v0.7  | zdroj signálu `github-pr` + pravidlo `rule_stale_pr`                | vydáno  |
+| v0.8  | CLI `triage signal` + pravidlo `manual_bump` + integrace RunPodBoss | vydáno  |
+| v0.8.1 | jednoobrazovkový souhrn `triage status`                            | vydáno  |
+| v0.9  | základ i18n — volba `--lang` + locales en/es/fr                     | vydáno  |
+| v0.10 | i18n kompletní — 17 locales + detektor regresí `triage lang --check`| vydáno  |
+| —     | skill `triage` Claude Code (v repu `claude_skill-Triage`)           | plánováno |
+| —     | dlouho běžící režim `triage watch` + jednotka systemd               | plánováno |
 
 ---
 

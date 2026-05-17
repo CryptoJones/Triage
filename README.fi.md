@@ -51,7 +51,7 @@ päättää järjestyksen ja kertoo tarkasti miksi.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    AIHE
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -249,9 +249,13 @@ uudelleenlaskettava prioriteetti) ja elävät kaksoispeileissä
 | v0.4   | BBS-tyylinen ANSI-teemajärjestelmä + alikomento `triage theme`    | julkaistu |
 | v0.5   | `runpod-cost`-signaalilähde + `cost_pressure`-sääntö              | julkaistu |
 | v0.6   | JSONL-tapahtumalokin kirjoittaja ulkoisille agenteille            | julkaistu |
-| v0.7   | `github-pr`-signaalilähde vanhentuneille PR:ille                  | suunniteltu |
-| v0.8   | Claude Coden `triage`-skill (`claude_skill-Triage`-repossa)       | suunniteltu |
-| v0.9   | `triage watch`-pitkäkestoinen tila + systemd-yksikkö              | suunniteltu |
+| v0.7   | `github-pr`-signaalilähde + sääntö `rule_stale_pr`                | julkaistu |
+| v0.8   | `triage signal`-CLI + sääntö `manual_bump` + RunPodBoss-integraatio | julkaistu |
+| v0.8.1 | `triage status` yhden ruudun yhteenveto                           | julkaistu |
+| v0.9   | i18n-perusta — `--lang`-valitsin + en/es/fr-kielet                | julkaistu |
+| v0.10  | i18n valmis — 17 kieltä + regressiotarkistin `triage lang --check`| julkaistu |
+| —      | Claude Coden `triage`-skill (`claude_skill-Triage`-repossa)       | suunniteltu |
+| —      | `triage watch`-pitkäkestoinen tila + systemd-yksikkö              | suunniteltu |
 
 ---
 

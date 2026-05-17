@@ -52,7 +52,7 @@ kuyruk her tick'te kendisini yeniden sıralar. Hedefleri sen koyarsın
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    KONU
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -247,9 +247,13 @@ hesaplanabilir öncelik) ve çift aynalarda yaşar (GitHub + Codeberg).
 | v0.4  | BBS tarzı ANSI tema sistemi + `triage theme` alt komutu              | yayınlandı |
 | v0.5  | `runpod-cost` sinyal kaynağı + `cost_pressure` kuralı                | yayınlandı |
 | v0.6  | harici ajanlar için JSONL olay günlük yazıcısı                       | yayınlandı |
-| v0.7  | bayatlamış PR'lar için `github-pr` sinyal kaynağı                    | planlandı |
-| v0.8  | Claude Code `triage` skill'i (`claude_skill-Triage` repo'sunda)      | planlandı |
-| v0.9  | uzun süreli `triage watch` modu + systemd birimi                     | planlandı |
+| v0.7  | `github-pr` sinyal kaynağı + `rule_stale_pr` kuralı                  | yayınlandı |
+| v0.8  | `triage signal` CLI + `manual_bump` kuralı + RunPodBoss entegrasyonu | yayınlandı |
+| v0.8.1 | `triage status` tek ekran özet                                      | yayınlandı |
+| v0.9  | i18n temeli — `--lang` seçeneği + en/es/fr yerelleri                 | yayınlandı |
+| v0.10 | i18n tamamlandı — 17 yerel + regresyon detektörü `triage lang --check` | yayınlandı |
+| —     | Claude Code `triage` skill'i (`claude_skill-Triage` repo'sunda)      | planlandı |
+| —     | uzun süreli `triage watch` modu + systemd birimi                     | planlandı |
 
 ---
 

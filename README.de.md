@@ -52,7 +52,7 @@ genau warum.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAL    BETREFF
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -248,9 +248,13 @@ Priorität) und leben auf Doppel-Mirrors (GitHub + Codeberg).
 | v0.4    | ANSI-Themensystem im BBS-Stil + Unterbefehl `triage theme`              | veröffentlicht |
 | v0.5    | `runpod-cost`-Signalquelle + `cost_pressure`-Regel                      | veröffentlicht |
 | v0.6    | JSONL-Ereignisprotokollschreiber für externe Agenten                    | veröffentlicht |
-| v0.7    | `github-pr`-Signalquelle für veraltete PRs                              | geplant        |
-| v0.8    | Claude-Code-`triage`-Skill (im Repo `claude_skill-Triage`)              | geplant        |
-| v0.9    | Langläufer-Modus `triage watch` + systemd-Unit                          | geplant        |
+| v0.7    | `github-pr`-Signalquelle + `rule_stale_pr`-Regel                        | veröffentlicht |
+| v0.8    | `triage signal`-CLI + `manual_bump`-Regel + RunPodBoss-Integration      | veröffentlicht |
+| v0.8.1  | `triage status` Ein-Bildschirm-Übersicht                                | veröffentlicht |
+| v0.9    | i18n-Grundlage — `--lang`-Option + en/es/fr-Locales                     | veröffentlicht |
+| v0.10   | i18n vollständig — 17 Locales + Regressionsdetektor `triage lang --check` | veröffentlicht |
+| —       | Claude-Code-`triage`-Skill (im Repo `claude_skill-Triage`)              | geplant        |
+| —       | Langläufer-Modus `triage watch` + systemd-Unit                          | geplant        |
 
 ---
 

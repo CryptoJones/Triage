@@ -51,7 +51,7 @@ og forteller deg nøyaktig hvorfor.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.9.0                  ║
+║                  T R I A G E   v0.10.0                  ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    EMNE
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -246,9 +246,13 @@ prioritet) og lever på doble speil (GitHub + Codeberg).
 | v0.4    | ANSI-temasystem i BBS-stil + underkommando `triage theme`         | sluppet    |
 | v0.5    | `runpod-cost`-signalkilde + `cost_pressure`-regel                 | sluppet    |
 | v0.6    | JSONL-hendelsesloggskriver for eksterne agenter                   | sluppet    |
-| v0.7    | `github-pr`-signalkilde for utdaterte PR-er                       | planlagt   |
-| v0.8    | Claude Codes `triage`-skill (i `claude_skill-Triage`-repo)        | planlagt   |
-| v0.9    | `triage watch`-langkjørende modus + systemd-enhet                 | planlagt   |
+| v0.7    | `github-pr`-signalkilde + regel `rule_stale_pr`                   | sluppet    |
+| v0.8    | `triage signal`-CLI + regel `manual_bump` + RunPodBoss-integrasjon | sluppet    |
+| v0.8.1  | `triage status` oversikt på én skjerm                             | sluppet    |
+| v0.9    | i18n-grunnlag — `--lang`-flagg + en/es/fr-lokaler                 | sluppet    |
+| v0.10   | i18n komplett — 17 lokaler + regresjonsdetektor `triage lang --check` | sluppet    |
+| —       | Claude Codes `triage`-skill (i `claude_skill-Triage`-repo)        | planlagt   |
+| —       | `triage watch`-langkjørende modus + systemd-enhet                 | planlagt   |
 
 ---
 

@@ -172,3 +172,58 @@ def test_current_lang_lazy_initializes(monkeypatch):
 def test_configure_returns_resolved():
     assert i18n.configure("es") == "es"
     assert i18n.configure("xx") == "en"
+
+
+# ---------- check_locales ----------
+
+def test_check_locales_clean_on_shipping_catalogs():
+    """Real shipped catalogs should pass the audit clean — the tests already
+    cover missing keys and placeholder mismatches, so check_locales() must
+    agree with that."""
+    assert i18n.check_locales() == {}
+
+
+def test_check_locales_detects_missing_key(monkeypatch):
+    """Inject a broken catalog and confirm check_locales surfaces it."""
+    fake = {"__native_name__": "Test", "(no tasks)": "(none)"}  # missing nearly everything
+    monkeypatch.setitem(LOCALES, "zz", fake)
+    try:
+        report = i18n.check_locales()
+        assert "zz" in report
+        assert report["zz"]["missing"], "expected missing keys to be reported"
+        assert "(no tasks)" not in report["zz"]["missing"], (
+            "key that IS present should not be in missing"
+        )
+    finally:
+        LOCALES.pop("zz", None)
+
+
+def test_check_locales_detects_placeholder_mismatch(monkeypatch):
+    """A locale that uses {tasks_total} where en uses {tasks} must fail."""
+    fake = dict(en.STRINGS)
+    fake["__native_name__"] = "Test"
+    fake["total tasks: {tasks}    ranked: {ranked}"] = (
+        "total tareas: {tareas}    clasificadas: {clasificadas}"
+    )
+    monkeypatch.setitem(LOCALES, "zz", fake)
+    try:
+        report = i18n.check_locales()
+        assert "zz" in report
+        mismatches = report["zz"]["placeholder_mismatches"]
+        keys_with_issues = [k for k, _en_ph, _tr_ph in mismatches]
+        assert "total tasks: {tasks}    ranked: {ranked}" in keys_with_issues
+    finally:
+        LOCALES.pop("zz", None)
+
+
+def test_check_locales_detects_extra_key(monkeypatch):
+    fake = dict(en.STRINGS)
+    fake["__native_name__"] = "Test"
+    fake["fictional-extra-key"] = "shouldn't be here"
+    monkeypatch.setitem(LOCALES, "zz", fake)
+    try:
+        report = i18n.check_locales()
+        assert "zz" in report
+        assert "fictional-extra-key" in report["zz"]["extra"]
+    finally:
+        LOCALES.pop("zz", None)
