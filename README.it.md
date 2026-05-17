@@ -33,7 +33,10 @@ Triage decide l'ordine e ti spiega esattamente perché.
 [Svenska](README.sv.md) ·
 [Norsk](README.no.md) ·
 [Dansk](README.da.md) ·
-[Suomi](README.fi.md)
+[Suomi](README.fi.md) ·
+[Română](README.ro.md) ·
+[Magyar](README.hu.md) ·
+[Türkçe](README.tr.md)
 
 </div>
 

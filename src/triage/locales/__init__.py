@@ -21,12 +21,15 @@ from . import de   # German
 from . import es   # Spanish
 from . import fi   # Finnish
 from . import fr   # French
+from . import hu   # Hungarian
 from . import it   # Italian
 from . import nl   # Dutch
 from . import no   # Norwegian
 from . import pl   # Polish
 from . import pt   # Portuguese
+from . import ro   # Romanian
 from . import sv   # Swedish
+from . import tr   # Turkish
 
 LOCALES: dict[str, dict[str, str]] = {
     "cs": cs.STRINGS,
@@ -36,10 +39,13 @@ LOCALES: dict[str, dict[str, str]] = {
     "es": es.STRINGS,
     "fi": fi.STRINGS,
     "fr": fr.STRINGS,
+    "hu": hu.STRINGS,
     "it": it.STRINGS,
     "nl": nl.STRINGS,
     "no": no.STRINGS,
     "pl": pl.STRINGS,
     "pt": pt.STRINGS,
+    "ro": ro.STRINGS,
     "sv": sv.STRINGS,
+    "tr": tr.STRINGS,
 }

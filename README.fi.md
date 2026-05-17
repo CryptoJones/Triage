@@ -33,7 +33,10 @@ päättää järjestyksen ja kertoo tarkasti miksi.
 [Svenska](README.sv.md) ·
 [Norsk](README.no.md) ·
 [Dansk](README.da.md) ·
-**Suomi**
+**Suomi** ·
+[Română](README.ro.md) ·
+[Magyar](README.hu.md) ·
+[Türkçe](README.tr.md)
 
 </div>
 
