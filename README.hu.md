@@ -52,7 +52,7 @@ dönti el a sorrendet, és pontosan elmondja, miért.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    TÁRGY
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -159,8 +159,8 @@ triage lang                     # elérhető nyelvek listázása
 
 Támogatott nyelvek: English, Español, Français, Deutsch, Italiano,
 Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
-Română, Magyar, Türkçe. Ha a nyelvet nem ismeri fel, az angol a
-tartalék.
+Română, Magyar, Türkçe, Català. Ha a nyelvet nem ismeri fel, az angol
+a tartalék.
 
 ### Eseménynapló (külső ágenseknek)
 

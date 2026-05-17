@@ -51,7 +51,7 @@ exakt varför.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    ÄMNE
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -156,8 +156,9 @@ triage lang                     # lista tillgängliga språk
 ```
 
 Språk som stöds: English, Español, Français, Deutsch, Italiano,
-Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi.
-Om språket inte känns igen används engelska som reserv.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Om språket inte känns igen används
+engelska som reserv.
 
 ### Händelselogg (för externa agenter)
 

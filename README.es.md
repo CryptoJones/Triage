@@ -52,7 +52,7 @@ los objetivos — Triage decide el orden y te explica exactamente por qué.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    ASUNTO
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -157,8 +157,9 @@ triage lang                     # lista los idiomas disponibles
 ```
 
 Idiomas admitidos: English, Español, Français, Deutsch, Italiano,
-Português. Si no se reconoce el idioma, se utiliza inglés como
-respaldo.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Si no se reconoce el idioma, se
+utiliza inglés como respaldo.
 
 ### Registro de eventos (para agentes externos)
 

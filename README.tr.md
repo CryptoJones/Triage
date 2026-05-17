@@ -52,7 +52,7 @@ kuyruk her tick'te kendisini yeniden sıralar. Hedefleri sen koyarsın
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    KONU
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -158,7 +158,8 @@ triage lang                     # mevcut dilleri listele
 
 Desteklenen diller: English, Español, Français, Deutsch, Italiano,
 Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
-Română, Magyar, Türkçe. Dil tanınmazsa İngilizce yedek olarak kullanılır.
+Română, Magyar, Türkçe, Català. Dil tanınmazsa İngilizce yedek olarak
+kullanılır.
 
 ### Olay günlüğü (harici ajanlar için)
 

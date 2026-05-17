@@ -51,7 +51,7 @@ pořadí a řekne ti přesně proč.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.10.0                  ║
+║                  T R I A G E   v0.10.0                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    PŘEDMĚT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -156,8 +156,9 @@ triage lang                     # vypíše dostupné jazyky
 ```
 
 Podporované jazyky: English, Español, Français, Deutsch, Italiano,
-Português, Nederlands, Polski, Čeština. Pokud jazyk není rozpoznán,
-použije se jako záloha angličtina.
+Português, Nederlands, Polski, Čeština, Svenska, Norsk, Dansk, Suomi,
+Română, Magyar, Türkçe, Català. Pokud jazyk není rozpoznán, použije se
+jako záloha angličtina.
 
 ### Záznam událostí (pro externí agenty)
 
