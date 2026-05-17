@@ -183,6 +183,86 @@ explainable.
 - Pure Python stdlib (no deps).
 - 100% deterministic given inputs → property-based tests possible.
 
+## Internationalization (i18n)
+
+Shipped in v0.9 (foundation) and v0.10 (complete, 17 locales).
+
+### Why dict-based catalogs instead of gettext
+
+- **No build step.** Each locale is a plain Python module
+  (`src/triage/locales/<code>.py`) that contributors edit directly.
+  No `msgfmt`, no `.mo` compilation, no `babel`/`pybabel` runtime.
+- **English fallback on miss.** `_(msgid)` returns the locale's
+  translation if present, or the English msgid itself if absent —
+  so a partial translation never breaks the CLI.
+- **Stdlib only.** Matches the project's stdlib-only invariant.
+
+### The `_()` lookup
+
+```python
+from triage.i18n import _
+_("rank {n}", n=5)  # -> "rank 5" / "rango 5" / "rang 5" / ...
+```
+
+`_(msgid, **fmt)` is the runtime translation primitive. `msgid` is
+the canonical English source string. `**fmt` are named-placeholder
+kwargs applied via `str.format`. A missing key falls back to msgid
+silently (visible only when `TRIAGE_I18N_DEBUG=1`).
+
+### Resolution precedence
+
+`triage.i18n.resolve_lang` picks the active locale via, in order:
+
+1. `--lang LANG` CLI flag.
+2. `$TRIAGE_LANG`.
+3. `$LC_ALL` / `$LC_MESSAGES` / `$LANG` (first hit, stripped to the
+   two-letter ISO 639-1 code; `C`/`POSIX` ignored).
+4. `locale.getlocale()` — picked up since v0.10. Wrapped in
+   try/except because some installs raise `ValueError`, and freshly-
+   initialized processes can return `(None, None)`.
+5. `DEFAULT_LANG` (= `en`).
+
+Unknown codes at any level fall through to the next; the chain is
+intentionally fail-safe so a misspelled env var becomes "use the next
+source," never a crash.
+
+### Adding a new locale
+
+The 4-step recipe (also in `src/triage/locales/__init__.py`):
+
+1. Copy `en.py` to `<iso639-1>.py`.
+2. Translate every value in `STRINGS`. Set `__native_name__` to the
+   language's name in its own script (e.g. `"Español"`, `"Türkçe"`).
+3. Add an `import` line + `LOCALES` entry in `__init__.py`.
+4. Run `pytest` and `triage lang --check` — both will catch missing
+   keys or placeholder mismatches.
+
+### The release gate
+
+`triage lang --check` audits every non-English locale against the
+English baseline and reports:
+
+- **missing keys** — present in `en.STRINGS`, absent in `<lang>.STRINGS`.
+- **extra keys** — present in `<lang>.STRINGS`, absent from `en`.
+- **placeholder mismatches** — e.g. `{tasks}` in en but `{tareas}`
+  in es. Names must line up exactly because they're passed as kwargs.
+
+Exit code is 1 if any drift is found, 0 otherwise — runnable as a
+release gate in both the GitHub Actions and Codeberg Woodpecker
+pipelines.
+
+### Known constraint: smart quotes in Python literals
+
+A typographic right-quote `"` (U+201D) inside a Python `"..."`
+string literal terminates the string early. Several translations
+use typographic quotation marks around English-as-foreign-word
+literals like `'en'`. **Use ASCII apostrophes (`'`) for those
+literals** to avoid the parser bug — and a translator running
+`triage lang --check` won't even notice the substitution because
+the rendered output stays readable.
+
+---
+
 ## Roadmap
 
 | Version | Feature                                                       | Status   |
@@ -195,9 +275,11 @@ explainable.
 | v0.6    | JSONL event log writer for external agents                    | shipped  |
 | v0.7    | `github-pr` stale-PR signal source + `stale_pr` rule          | shipped  |
 | v0.8    | `triage signal` CLI + `manual_bump` rule + RunPodBoss eval    | shipped  |
-| v0.9    | Claude Code skill: invokes `triage tick` then surfaces the    | planned  |
-|         | recommended reorder for confirmation                          |          |
-| v0.10   | Long-running mode (`triage watch`) instead of `triage tick`   | planned  |
+| v0.8.1  | `triage status` one-screen at-a-glance summary                | shipped  |
+| v0.9    | i18n foundation — `--lang` flag + en/es/fr baseline           | shipped  |
+| v0.10   | i18n complete — 17 locales + `triage lang --check` regression detector | shipped  |
+| —       | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
+| —       | Long-running mode (`triage watch`) + systemd unit             | planned  |
 
 ---
 
