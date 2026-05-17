@@ -15,6 +15,7 @@ roadmap is on the README's "Status" table.
 """
 
 from . import en   # English (baseline)
+from . import ca   # Catalan
 from . import cs   # Czech
 from . import da   # Danish
 from . import de   # German
@@ -32,6 +33,7 @@ from . import sv   # Swedish
 from . import tr   # Turkish
 
 LOCALES: dict[str, dict[str, str]] = {
+    "ca": ca.STRINGS,
     "cs": cs.STRINGS,
     "da": da.STRINGS,
     "de": de.STRINGS,

@@ -36,7 +36,8 @@ kuyruk her tick'te kendisini yeniden sıralar. Hedefleri sen koyarsın
 [Suomi](README.fi.md) ·
 [Română](README.ro.md) ·
 [Magyar](README.hu.md) ·
-**Türkçe**
+**Türkçe** ·
+[Català](README.ca.md)
 
 </div>
 
