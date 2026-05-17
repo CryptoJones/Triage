@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`triage doctor`** — one-screen, read-only environment-diagnostics
+  subcommand. Reports version, Python version, resolved locale +
+  the signal that won locale resolution (TRIAGE_LANG / LC_ALL /
+  LC_MESSAGES / LANG / locale.getlocale() / default), store path,
+  log path, and locale-catalog drift count. Plain text or `--json`.
+  Designed for paste-into-bug-reports use.
+
 ### Planned
 - Claude Code `triage` skill in `claude_skill-Triage/triage/`
   (wraps `triage tick` + `triage list --json` + `triage why <id>`,
@@ -14,8 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   before any reorder).
 - `triage watch` long-running mode + `examples/triage.service`
   systemd unit.
-- `triage doctor` — one-screen environment diagnostics (version,
-  resolved locale, store path, log path, `lang --check` status).
 
 ---
 

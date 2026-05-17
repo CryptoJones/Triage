@@ -218,6 +218,26 @@ Color follows the standards:
 - `FORCE_COLOR=1` enables color on non-TTY.
 - `--no-color` flag = explicit per-invocation kill switch.
 
+### Diagnostics
+
+`triage doctor` is the one-screen environment summary — paste its
+output into a bug report and the maintainer has everything they
+need to reproduce your setup:
+
+```
+$ triage doctor
+triage v0.11.0    (python 3.14.4)
+  locale:  en   source=LANG   available=17   drift=0
+  store:   /home/you/.triage   exists=True
+  log:     /var/log/triage.log
+```
+
+Add `--json` for machine-parseable output. The `source` field
+reports which locale-resolution signal won (`TRIAGE_LANG` /
+`LC_ALL` / `LC_MESSAGES` / `LANG` / `locale.getlocale()` /
+`default`), and `drift` is the count of locales out of sync with
+the English baseline (run `triage lang --check` for the details).
+
 ---
 
 ## Related projects
