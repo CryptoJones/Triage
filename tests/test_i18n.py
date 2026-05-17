@@ -63,6 +63,39 @@ def test_resolve_lc_all_priority_over_lang(monkeypatch):
     assert i18n.resolve_lang(None) == "fr"
 
 
+def test_resolve_lang_falls_back_to_locale_getlocale_when_env_unset(monkeypatch):
+    """Windows + bare POSIX shells have no $LANG. Fall back to locale.getlocale()."""
+    import locale as _locale
+    monkeypatch.setattr(_locale, "getlocale", lambda: ("de_DE", "UTF-8"))
+    assert i18n.resolve_lang(None) == "de"
+
+
+def test_resolve_lang_handles_locale_getlocale_failure(monkeypatch):
+    """locale.getlocale() can raise ValueError on misconfigured installs."""
+    import locale as _locale
+
+    def _boom():
+        raise ValueError("unknown locale")
+
+    monkeypatch.setattr(_locale, "getlocale", _boom)
+    assert i18n.resolve_lang(None) == "en"
+
+
+def test_resolve_lang_handles_locale_getlocale_returning_none(monkeypatch):
+    """Fresh-process locale.getlocale() can return (None, None)."""
+    import locale as _locale
+    monkeypatch.setattr(_locale, "getlocale", lambda: (None, None))
+    assert i18n.resolve_lang(None) == "en"
+
+
+def test_env_var_priority_over_locale_getlocale(monkeypatch):
+    """$LANG (when set + non-C) must win over locale.getlocale()."""
+    import locale as _locale
+    monkeypatch.setenv("LANG", "es")
+    monkeypatch.setattr(_locale, "getlocale", lambda: ("de_DE", "UTF-8"))
+    assert i18n.resolve_lang(None) == "es"
+
+
 # ---------- _() lookup ----------
 
 def test_lookup_english_returns_baseline():

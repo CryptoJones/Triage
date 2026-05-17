@@ -69,6 +69,18 @@ def resolve_lang(arg: str | None = None) -> str:
             code = _strip_locale(v)
             if code in LOCALES:
                 return code
+    # Windows + any POSIX setup that doesn't export $LANG: try the
+    # process locale registered with the C library. Wrapped because
+    # locale.getlocale() can raise on misconfigured systems.
+    try:
+        import locale as _locale
+        sys_locale = _locale.getlocale()[0]
+        if sys_locale:
+            code = _strip_locale(sys_locale)
+            if code in LOCALES:
+                return code
+    except Exception:
+        pass
     return DEFAULT_LANG
 
 
