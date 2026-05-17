@@ -50,7 +50,7 @@ you exactly why.
 
 ```
 ╔════════════════════════════════════════════════════════╗
-║                  T R I A G E   v0.11.0                 ║
+║                  T R I A G E   v0.11.1                 ║
 ╚════════════════════════════════════════════════════════╝
   ID               PRI  BAR    SUBJECT
   ════════════  ══════  ═════  ════════════════════════════════════════
@@ -271,6 +271,7 @@ and live on dual mirrors (GitHub + Codeberg).
 | v0.9    | i18n foundation — `--lang` flag + en/es/fr baseline           | shipped  |
 | v0.10   | i18n complete — 17 locales + `triage lang --check` regression detector | shipped  |
 | v0.11   | Post-i18n polish — `locale.getlocale()` fallback, `lang --json`, CI gate, model-layer `_()`, status version stamp | shipped  |
+| v0.11.1 | `triage doctor` env-diagnostics subcommand                    | shipped  |
 | —       | Claude Code `triage` skill (in `claude_skill-Triage` repo)    | planned  |
 | —       | `triage watch` long-running mode + systemd unit               | planned  |
 
