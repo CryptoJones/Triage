@@ -26,7 +26,10 @@ Triage decide l'ordine e ti spiega esattamente perché.
 [Français](README.fr.md) ·
 [Deutsch](README.de.md) ·
 **Italiano** ·
-[Português](README.pt.md)
+[Português](README.pt.md) ·
+[Nederlands](README.nl.md) ·
+[Polski](README.pl.md) ·
+[Čeština](README.cs.md)
 
 </div>
 
