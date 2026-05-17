@@ -6,6 +6,9 @@
 # (like https://github.com/CryptoJones/RunPodBoss) to push
 # threshold-cross events into Triage as manual signals.
 #
+# Requires: triage v0.8+ (introduces `triage signal manual` +
+#           rule_manual_bump).
+#
 # Demonstrates:
 # - `triage signal manual` with --source and --bump for
 #   external-watcher integration.
