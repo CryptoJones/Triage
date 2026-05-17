@@ -5,6 +5,9 @@
 # release-train.sh — a four-task release pipeline where the
 # upstream tasks must finish before the downstream ones.
 #
+# Requires: triage v0.2+ (uses --blocked-by + blocker_transitive
+#           propagation).
+#
 # Demonstrates:
 # - --blocked-by chains and the blocker_transitive rule. Setting
 #   --base-score on the *final* task naturally lifts its blockers

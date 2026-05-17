@@ -4,6 +4,8 @@
 #
 # rotate-credentials.sh — quarterly credential-rotation queue.
 #
+# Requires: triage v0.1+ (uses --deadline, --cron-window, --tag).
+#
 # Demonstrates:
 # - Per-task --deadline so deadline_decay bumps priority as the
 #   rotation date approaches.

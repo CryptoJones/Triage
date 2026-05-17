@@ -1,5 +1,9 @@
 # /etc/cron.d/triage — system-wide cron entry for periodic Triage tick.
 #
+# Requires: triage v0.7+ for the github-pr poll line; v0.3+ for
+#           github-ci; v0.5+ for runpod-cost; v0.1+ for the bare
+#           `triage tick` line.
+#
 # Install:
 #   sudo install -m 0644 examples/cron-tick /etc/cron.d/triage
 #   # or, for user-only crontab:
