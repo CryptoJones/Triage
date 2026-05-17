@@ -33,7 +33,10 @@ og forteller deg nøyaktig hvorfor.
 [Svenska](README.sv.md) ·
 **Norsk** ·
 [Dansk](README.da.md) ·
-[Suomi](README.fi.md)
+[Suomi](README.fi.md) ·
+[Română](README.ro.md) ·
+[Magyar](README.hu.md) ·
+[Türkçe](README.tr.md)
 
 </div>
 
