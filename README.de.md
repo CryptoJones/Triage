@@ -212,17 +212,18 @@ Farbverhalten:
 
 ---
 
-## Begleit-Skill
+## Verwandte Projekte
 
-[**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage)
-ist das Claude-Code-Skills-Repository für dieses Projekt. Es liefert
-derzeit `TaskPriorityReorder` — die **manuelle Übersteuerung**, wenn
-ein Mensch einfach eine Aufgabe an den Anfang der Claude-Code-Aufgabenliste
-heben möchte — und beherbergt die `triage`-Skill (das automatische,
-signalgetriebene Gegenstück) in Triage v0.7.
+Triage ist ein Baustein eines kleinen Ökosystems. Die Teile greifen ineinander:
 
-Beide Skills nutzen die Triage-Primitive: stabile Identität plus
-neu berechenbare Priorität.
+| Repository | Rolle |
+|------------|-------|
+| [**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage) | Claude-Code-Skills-Repository. Liefert heute `TaskPriorityReorder` (**manuelle Übersteuerung** — „X nach oben schieben") und wird die `triage`-Skill (**signalgetriebener Empfehlungsgeber** — „was soll ich als Nächstes tun?") in einem zukünftigen Release beherbergen. |
+| [**TriageMCP**](https://github.com/CryptoJones/TriageMCP) | **MCP-Server**, der die Triage-API für KI-Agenten verfügbar macht. Acht Werkzeuge (`list_tasks`, `add_task`, `tick`, `why_task`, `status`, `remove_task`, `inject_signal`, `get_task`) über stdio. In `~/.claude/mcp.json` eintragen, und ein Agent kann deine Prioritätswarteschlange direkt lesen und schreiben. |
+| [**RunPodBoss**](https://github.com/CryptoJones/RunPodBoss) | Guthaben-Schutzschwelle für RunPod. Integriert sich mit Triage über `extra_notify_command` — bei Überschreiten einer Abrechnungsschwelle injiziert RunPodBoss ein manuelles Signal in Triage, sodass die Aufgabe „leerlaufende Pods abbauen" an die Spitze deiner Warteschlange wandert. Konfigurationsrezept in [`docs/runpodboss-integration.md`](docs/runpodboss-integration.md). |
+
+Alle vier teilen die Triage-Primitive (stabile Identität + neu berechenbare
+Priorität) und leben auf Doppel-Mirrors (GitHub + Codeberg).
 
 ---
 

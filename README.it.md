@@ -213,17 +213,18 @@ Il colore segue gli standard:
 
 ---
 
-## Skill compagna
+## Progetti correlati
 
-[**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage)
-è il repository delle skill di Claude Code per questo progetto.
-Attualmente fornisce `TaskPriorityReorder` — la **sovrascrittura
-manuale** quando una persona vuole semplicemente portare un'attività
-in cima alla lista di attività di Claude Code — e ospiterà la skill
-`triage` (la controparte automatica guidata dai segnali) in Triage v0.7.
+Triage è un pezzo di un piccolo ecosistema. I pezzi si combinano:
 
-Le due skill condividono la primitiva di Triage: identità stabile
-più priorità ricalcolabile.
+| Repository | Ruolo |
+|------------|-------|
+| [**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage) | Repository delle skill di Claude Code. Fornisce oggi `TaskPriorityReorder` (**sovrascrittura manuale** — «porta X in cima») e ospiterà la skill `triage` (**raccomandatore guidato dai segnali** — «cosa dovrei fare adesso?») in una versione futura. |
+| [**TriageMCP**](https://github.com/CryptoJones/TriageMCP) | **Server MCP** che avvolge l'API di Triage per agenti IA. Otto strumenti (`list_tasks`, `add_task`, `tick`, `why_task`, `status`, `remove_task`, `inject_signal`, `get_task`) su stdio. Inseriscilo in `~/.claude/mcp.json` e un agente potrà leggere e scrivere direttamente la tua coda di priorità. |
+| [**RunPodBoss**](https://github.com/CryptoJones/RunPodBoss) | Salvaguardia del saldo di credito per RunPod. Si integra con Triage tramite `extra_notify_command` — quando viene superata una soglia di fatturazione, RunPodBoss inietta un segnale manuale in Triage in modo che l'attività «svuota i pod inattivi» salga in cima alla tua coda. Ricetta di configurazione in [`docs/runpodboss-integration.md`](docs/runpodboss-integration.md). |
+
+Tutti e quattro condividono la primitiva di Triage (identità stabile + priorità
+ricalcolabile) e vivono su mirror doppi (GitHub + Codeberg).
 
 ---
 
