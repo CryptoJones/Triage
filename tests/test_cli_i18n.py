@@ -29,6 +29,41 @@ def test_lang_subcommand_lists_codes(capsys):
     assert "Français" in out
 
 
+def test_lang_json_emits_structured_languages(capsys):
+    import json
+    assert main(["lang", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["default"] == "en"
+    codes = {entry["code"] for entry in payload["languages"]}
+    assert {"en", "es", "fr", "de", "ca"} <= codes
+    native = {entry["code"]: entry["native_name"] for entry in payload["languages"]}
+    assert native["en"] == "English"
+    assert native["es"] == "Español"
+    assert native["ca"] == "Català"
+
+
+def test_lang_check_json_clean_returns_zero_and_empty_dict(capsys):
+    import json
+    assert main(["lang", "--check", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload == {}
+
+
+def test_lang_check_json_drift_returns_one_and_drift_report(capsys, monkeypatch):
+    import json
+    from triage.locales import LOCALES
+
+    fake = {"__native_name__": "Test", "(no tasks)": "(none)"}
+    monkeypatch.setitem(LOCALES, "zz", fake)
+    try:
+        assert main(["lang", "--check", "--json"]) == 1
+        payload = json.loads(capsys.readouterr().out)
+        assert "zz" in payload
+        assert payload["zz"]["missing"], "expected missing keys to be reported"
+    finally:
+        LOCALES.pop("zz", None)
+
+
 def test_no_tasks_in_english(capsys):
     assert main(["list"]) == 0
     out = capsys.readouterr().out
