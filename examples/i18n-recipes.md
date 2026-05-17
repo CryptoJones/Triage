@@ -130,6 +130,36 @@ everything that still needs translating before opening a PR.
 
 ---
 
+## 6. First step when something's wrong: `triage doctor`
+
+When a locale doesn't behave the way you expect — wrong language
+appearing, fallback to English when you set `TRIAGE_LANG`, etc. —
+run `triage doctor` first:
+
+```bash
+$ triage doctor
+triage v0.11.0    (python 3.14.4)
+  locale:  fr   source=TRIAGE_LANG   available=17   drift=0
+  store:   /home/you/.triage   exists=True
+  log:     /var/log/triage.log
+```
+
+The `source` line tells you which signal Triage picked up. Common
+diagnoses:
+
+- `source=default` despite a set `$LANG`? Your `$LANG` may be a
+  locale code Triage doesn't ship (e.g. `ja_JP`). Run
+  `triage lang` to see the supported list.
+- `source=LANG` when you wanted `$TRIAGE_LANG` to win? Make sure
+  the env var is exported, not just set in the parent shell.
+- `drift > 0`? A fork or vendored copy got out of sync.
+  `triage lang --check` will list the exact drift.
+
+Paste the whole output into bug reports. Or use `--json` if a
+tool needs to parse it.
+
+---
+
 ## What's NOT translated
 
 Triage deliberately leaves these in English / ASCII / numeric form
