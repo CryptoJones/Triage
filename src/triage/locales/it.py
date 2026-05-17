@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "lingue disponibili (predefinita: {default}):",
     "unknown language: {lang}. known: {known}":
         "lingua sconosciuta: {lang}. conosciute: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "l'espressione cron deve avere 5 campi, ricevuti {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "ciclo: arco {u} -> {v} rimosso (arco di ritorno)",
+    "self-block: {id} blocks itself; ignored":
+        "auto-blocco: {id} blocca se stessa; ignorato",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "blocco pendente: {id} blocked_by {blocker} (sconosciuto); ignorato",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: percorso di log {path} non scrivibile; logging disabilitato (imposta TRIAGE_NO_LOG=1 per silenziare).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} non scrivibile, logging in {fallback} (crea + chown {default} per usare il percorso standard).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: ne {default} ne {fallback} sono scrivibili; gli eventi non saranno registrati.",
 }

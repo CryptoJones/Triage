@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "limbi disponibile (implicit: {default}):",
     "unknown language: {lang}. known: {known}":
         "limbă necunoscută: {lang}. cunoscute: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "expresia cron trebuie sa aiba 5 campuri, primite {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "ciclu: muchia {u} -> {v} eliminata (muchie inversa)",
+    "self-block: {id} blocks itself; ignored":
+        "auto-blocaj: {id} se blocheaza singur; ignorat",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "blocator suspendat: {id} blocked_by {blocker} (necunoscut); ignorat",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: calea jurnalului {path} nu este scriibila; jurnalizare dezactivata (setati TRIAGE_NO_LOG=1 pentru a tacea).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} nu este scriibil, se jurnalizeaza in {fallback} in schimb (creati + chown {default} pentru a folosi calea standard).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: nici {default} nici {fallback} nu este scriibil; evenimentele nu vor fi jurnalizate.",
 }

@@ -123,4 +123,20 @@ STRINGS: dict[str, str] = {
         "mevcut diller (varsayılan: {default}):",
     "unknown language: {lang}. known: {known}":
         "bilinmeyen dil: {lang}. bilinenler: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron ifadesi 5 alana sahip olmali, alindi {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "dongu: {u} -> {v} kenari kaldirildi (geri kenar)",
+    "self-block: {id} blocks itself; ignored":
+        "oz-engelleme: {id} kendini engelliyor; goz ardi edildi",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "askida engelleyici: {id} blocked_by {blocker} (bilinmiyor); goz ardi edildi",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: gunluk yolu {path} yazilabilir degil; gunluk devre disi (susturmak icin TRIAGE_NO_LOG=1 ayarlayin).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} yazilabilir degil, bunun yerine {fallback} kaydediliyor (standart yolu kullanmak icin {default} olusturup chown yapin).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: ne {default} ne de {fallback} yazilabilir; olaylar kaydedilmeyecek.",
 }

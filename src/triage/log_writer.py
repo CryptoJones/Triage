@@ -39,6 +39,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .i18n import _
+
 DEFAULT_LOG_PATH = Path("/var/log/triage.log")
 FALLBACK_LOG_PATH = Path.home() / ".triage" / "triage.log"
 
@@ -105,8 +107,11 @@ def configure(
     # and stop (don't silently re-route their explicit choice).
     if path is not None or os.environ.get("TRIAGE_LOG_FILE"):
         print(
-            f"triage: log path {candidate} is not writable; "
-            f"logging disabled (set TRIAGE_NO_LOG=1 to silence).",
+            _(
+                "triage: log path {path} is not writable; "
+                "logging disabled (set TRIAGE_NO_LOG=1 to silence).",
+                path=candidate,
+            ),
             file=sys.stderr,
         )
         _disabled = True
@@ -118,9 +123,12 @@ def configure(
         _resolved_path = FALLBACK_LOG_PATH
         if not _warned:
             print(
-                f"triage: {DEFAULT_LOG_PATH} not writable, "
-                f"logging to {FALLBACK_LOG_PATH} instead "
-                f"(create + chown {DEFAULT_LOG_PATH} to use the standard path).",
+                _(
+                    "triage: {default} not writable, "
+                    "logging to {fallback} instead "
+                    "(create + chown {default} to use the standard path).",
+                    default=DEFAULT_LOG_PATH, fallback=FALLBACK_LOG_PATH,
+                ),
                 file=sys.stderr,
             )
             _warned = True
@@ -129,8 +137,11 @@ def configure(
     # Neither writable — disable, with a warning, so the CLI still works.
     if not _warned:
         print(
-            f"triage: neither {DEFAULT_LOG_PATH} nor {FALLBACK_LOG_PATH} "
-            f"is writable; events will not be logged.",
+            _(
+                "triage: neither {default} nor {fallback} "
+                "is writable; events will not be logged.",
+                default=DEFAULT_LOG_PATH, fallback=FALLBACK_LOG_PATH,
+            ),
             file=sys.stderr,
         )
         _warned = True

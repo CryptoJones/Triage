@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "dostupné jazyky (výchozí: {default}):",
     "unknown language: {lang}. known: {known}":
         "neznámý jazyk: {lang}. známé: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "vyraz cron musi mit 5 poli, obdrzeno {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "cyklus: odstranena hrana {u} -> {v} (zpetna hrana)",
+    "self-block: {id} blocks itself; ignored":
+        "vlastni blokovani: {id} blokuje sama sebe; ignorovano",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "viseny blokator: {id} blocked_by {blocker} (neznamy); ignorovano",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: cesta zaznamu {path} neni zapisovatelna; protokolovani zakazano (nastav TRIAGE_NO_LOG=1 pro utiseni).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} neni zapisovatelna, protokoluji do {fallback} (vytvor + chown {default} pro standardni cestu).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: ani {default}, ani {fallback} neni zapisovatelna; udalosti nebudou protokolovany.",
 }

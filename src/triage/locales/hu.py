@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "elérhető nyelvek (alapértelmezés: {default}):",
     "unknown language: {lang}. known: {known}":
         "ismeretlen nyelv: {lang}. ismertek: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron-kifejezesnek 5 mezovel kell rendelkeznie, erkezett {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "ciklus: elt {u} -> {v} eltavolitva (vissza-el)",
+    "self-block: {id} blocks itself; ignored":
+        "onblokk: {id} onmagat blokkolja; figyelmen kivul hagyva",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "logo blokkolo: {id} blocked_by {blocker} (ismeretlen); figyelmen kivul hagyva",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: a naploutvonal {path} nem irhato; naplozas letiltva (a nema elnemitasahoz allitsd TRIAGE_NO_LOG=1-re).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} nem irhato, naplozas helyette {fallback} utvonalra (a szabvanyos utvonal hasznalatahoz hozd letre + chown {default}).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: sem {default}, sem {fallback} nem irhato; az esemenyek nem lesznek naplozva.",
 }

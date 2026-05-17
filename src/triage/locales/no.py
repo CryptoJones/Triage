@@ -125,4 +125,20 @@ STRINGS: dict[str, str] = {
         "tilgjengelige språk (standard: {default}):",
     "unknown language: {lang}. known: {known}":
         "ukjent språk: {lang}. kjente: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron-uttrykk ma ha 5 felt, fikk {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "syklus: fjernet kant {u} -> {v} (bakkant)",
+    "self-block: {id} blocks itself; ignored":
+        "selvblokk: {id} blokkerer seg selv; ignorert",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "los blokkerer: {id} blocked_by {blocker} (ukjent); ignorert",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: loggsti {path} er ikke skrivbar; logging deaktivert (sett TRIAGE_NO_LOG=1 for a dempe).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} er ikke skrivbar, logger til {fallback} (lag + chown {default} for a bruke standardstien).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: verken {default} eller {fallback} er skrivbar; hendelser logges ikke.",
 }
