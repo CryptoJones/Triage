@@ -193,17 +193,18 @@ Color follows the standards:
 
 ---
 
-## Companion skill
+## Related projects
 
-[**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage)
-is the Claude Code skills repository for this project. It currently
-ships `TaskPriorityReorder` — the **manual override** for when a human
-just wants to bump a task to the top of Claude Code's task list — and
-will host the `triage` skill (the automatic, signal-driven counterpart)
-at Triage v0.7.
+Triage is one piece of a small ecosystem. The pieces compose:
 
-The two skills share Triage's stable-id-plus-recomputable-priority
-primitive.
+| Repo | Role |
+|------|------|
+| [**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage) | Claude Code skills repo. Ships `TaskPriorityReorder` (**manual override** — "bump X to top") today; will host the `triage` skill (**signal-driven recommender** — "what should I do next?") in a future release. |
+| [**TriageMCP**](https://github.com/CryptoJones/TriageMCP) | **MCP server** wrapping Triage's API for AI agents. Eight tools (`list_tasks`, `add_task`, `tick`, `why_task`, `status`, `remove_task`, `inject_signal`, `get_task`) over stdio. Drop it into `~/.claude/mcp.json` and an agent can read + write your priority queue directly. |
+| [**RunPodBoss**](https://github.com/CryptoJones/RunPodBoss) | Credit-balance guardrail for RunPod. Integrates with Triage via `extra_notify_command` — when a billing threshold trips, RunPodBoss pushes a manual signal into Triage so the "drain idle pods" task floats to the top of your queue. Setup recipe in [`docs/runpodboss-integration.md`](docs/runpodboss-integration.md). |
+
+All four share Triage's stable-id-plus-recomputable-priority primitive
+and live on dual mirrors (GitHub + Codeberg).
 
 ---
 

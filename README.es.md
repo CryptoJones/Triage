@@ -213,17 +213,18 @@ El color sigue las convenciones:
 
 ---
 
-## Skill compañera
+## Proyectos relacionados
 
-[**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage)
-es el repositorio de skills de Claude Code para este proyecto.
-Actualmente incluye `TaskPriorityReorder` — la **anulación manual**
-para cuando alguien quiere subir una tarea al principio de la lista
-de tareas de Claude Code — y alojará la skill `triage` (la
-contrapartida automática guiada por señales) en Triage v0.7.
+Triage es una pieza de un pequeño ecosistema. Las piezas componen:
 
-Ambas skills comparten la primitiva de Triage: identidad estable más
-prioridad recomputable.
+| Repositorio | Rol |
+|-------------|-----|
+| [**claude_skill-Triage**](https://github.com/CryptoJones/claude_skill-Triage) | Repositorio de skills de Claude Code. Ofrece hoy `TaskPriorityReorder` (**anulación manual** — «subir X al principio») y alojará la skill `triage` (**recomendador guiado por señales** — «¿qué debería hacer ahora?») en una versión futura. |
+| [**TriageMCP**](https://github.com/CryptoJones/TriageMCP) | **Servidor MCP** que envuelve la API de Triage para agentes de IA. Ocho herramientas (`list_tasks`, `add_task`, `tick`, `why_task`, `status`, `remove_task`, `inject_signal`, `get_task`) sobre stdio. Colócalo en `~/.claude/mcp.json` y un agente podrá leer y escribir tu cola de prioridades directamente. |
+| [**RunPodBoss**](https://github.com/CryptoJones/RunPodBoss) | Protección del saldo de crédito para RunPod. Se integra con Triage mediante `extra_notify_command` — cuando se cruza un umbral de facturación, RunPodBoss inyecta una señal manual en Triage para que la tarea «vaciar pods inactivos» suba al principio de tu cola. Receta de configuración en [`docs/runpodboss-integration.md`](docs/runpodboss-integration.md). |
+
+Los cuatro comparten la primitiva de Triage (identidad estable + prioridad
+recomputable) y se publican en doble espejo (GitHub + Codeberg).
 
 ---
 
