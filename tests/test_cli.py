@@ -129,3 +129,36 @@ def test_self_loop_warning_appears_on_stderr(home, capsys, monkeypatch):
     main(["list"])
     captured = capsys.readouterr()
     assert "self-block" in captured.err
+
+
+def test_doctor_text_output_contains_core_fields(home, capsys, monkeypatch):
+    monkeypatch.setenv("TRIAGE_NO_LOG", "1")
+    assert main(["doctor"]) == 0
+    out = capsys.readouterr().out
+    assert "triage v" in out
+    assert "locale:" in out
+    assert "store:" in out
+    assert "log:" in out
+    assert str(home) in out
+
+
+def test_doctor_json_output_has_expected_shape(home, capsys, monkeypatch):
+    monkeypatch.setenv("TRIAGE_NO_LOG", "1")
+    assert main(["doctor", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert "version" in payload
+    assert "python" in payload
+    assert payload["store"]["path"] == str(home)
+    assert payload["log"]["enabled"] is False  # TRIAGE_NO_LOG=1
+    assert payload["locale"]["resolved"] in {"en", "es", "fr"}  # whatever resolved
+    assert payload["locale"]["drift"] == 0
+    assert payload["locale"]["available"] >= 17
+
+
+def test_doctor_reports_explicit_env_locale_source(home, capsys, monkeypatch):
+    monkeypatch.setenv("TRIAGE_NO_LOG", "1")
+    monkeypatch.setenv("TRIAGE_LANG", "es")
+    assert main(["doctor", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["locale"]["resolved"] == "es"
+    assert payload["locale"]["source"] == "TRIAGE_LANG"

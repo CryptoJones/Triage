@@ -6,10 +6,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
-from typing import Sequence
+from pathlib import Path
+from typing import Any, Sequence
 
-from . import __version__, cron, i18n, log_writer, scheduler, theme
+from . import __version__, cron, i18n, log_writer, scheduler, store, theme
 from .i18n import _
 from .model import Task
 from .sources import github_ci, github_pr, runpod
@@ -467,6 +469,73 @@ def cmd_theme(args: argparse.Namespace) -> int:
     return 0
 
 
+def _detect_locale_source() -> str:
+    """Best-effort detection of which signal won locale resolution.
+
+    Read-only; used only by `triage doctor`. Mirrors the precedence
+    chain in `i18n.resolve_lang` but reports the source name instead
+    of returning a code.
+    """
+    if os.environ.get("TRIAGE_LANG"):
+        return "TRIAGE_LANG"
+    for var in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        v = os.environ.get(var)
+        if v and v != "C" and v != "POSIX":
+            return var
+    try:
+        import locale as _locale
+        if _locale.getlocale()[0]:
+            return "locale.getlocale()"
+    except Exception:
+        pass
+    return "default"
+
+
+def cmd_doctor(args: argparse.Namespace) -> int:
+    """Print a read-only environment-diagnostics summary for bug reports."""
+    store_root = store.default_root() if getattr(args, "home", None) is None else Path(args.home)
+    log_disabled_env = os.environ.get("TRIAGE_NO_LOG") == "1"
+    log_path = None if log_disabled_env else log_writer.get_path()
+    drift = i18n.check_locales()
+    locale_count = len(i18n.list_available()) - 1  # minus en baseline
+
+    info: dict[str, Any] = {
+        "version": __version__,
+        "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+        "locale": {
+            "resolved": i18n.current_lang(),
+            "source": _detect_locale_source(),
+            "available": locale_count + 1,  # include en
+            "drift": len(drift),
+        },
+        "store": {
+            "path": str(store_root),
+            "exists": store_root.exists(),
+        },
+        "log": {
+            "path": str(log_path) if log_path else None,
+            "enabled": log_path is not None,
+        },
+    }
+
+    if getattr(args, "json", False):
+        print(json.dumps(info, indent=2, sort_keys=True))
+        return 0
+
+    print(f"triage v{info['version']}    (python {info['python']})")
+    print(f"  locale:  {info['locale']['resolved']}   "
+          f"source={info['locale']['source']}   "
+          f"available={info['locale']['available']}   "
+          f"drift={info['locale']['drift']}")
+    print(f"  store:   {info['store']['path']}   "
+          f"exists={info['store']['exists']}")
+    if info['log']['enabled']:
+        print(f"  log:     {info['log']['path']}")
+    else:
+        print("  log:     disabled")
+    return 0
+
+
 def cmd_lang(args: argparse.Namespace) -> int:
     """List available output languages (or switch via --lang on any command)."""
     as_json = getattr(args, "json", False)
@@ -680,6 +749,17 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     lng.set_defaults(func=cmd_lang)
+
+    doc = sub.add_parser(
+        "doctor",
+        help="Print a read-only environment-diagnostics summary (for bug reports).",
+    )
+    doc.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit machine-parseable JSON instead of human-readable text.",
+    )
+    doc.set_defaults(func=cmd_doctor)
 
     return p
 
