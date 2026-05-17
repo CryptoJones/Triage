@@ -123,4 +123,20 @@ STRINGS: dict[str, str] = {
         "käytettävissä olevat kielet (oletus: {default}):",
     "unknown language: {lang}. known: {known}":
         "tuntematon kieli: {lang}. tunnetut: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron-lausekkeessa pitaa olla 5 kenttaa, saatiin {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "sykli: poistettiin reuna {u} -> {v} (taaksepainreuna)",
+    "self-block: {id} blocks itself; ignored":
+        "itse-esto: {id} estaa itsensa; ohitettu",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "irrallinen estaja: {id} blocked_by {blocker} (tuntematon); ohitettu",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: lokipolku {path} ei ole kirjoituskelpoinen; loki pois kaytosta (aseta TRIAGE_NO_LOG=1 vaimentaaksesi).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} ei kirjoituskelpoinen, kirjataan {fallback} sijaan (luo + chown {default} kayttaaksesi vakiopolkua).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: kumpikaan {default} tai {fallback} ei ole kirjoituskelpoinen; tapahtumia ei kirjata.",
 }

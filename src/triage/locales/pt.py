@@ -125,4 +125,20 @@ STRINGS: dict[str, str] = {
         "idiomas disponíveis (predefinido: {default}):",
     "unknown language: {lang}. known: {known}":
         "idioma desconhecido: {lang}. conhecidos: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "a expressao cron deve ter 5 campos, recebidos {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "ciclo: aresta {u} -> {v} removida (aresta de retorno)",
+    "self-block: {id} blocks itself; ignored":
+        "auto-bloqueio: {id} bloqueia-se a si proprio; ignorado",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "bloqueador pendente: {id} blocked_by {blocker} (desconhecido); ignorado",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: caminho do registo {path} nao e gravavel; registo desactivado (define TRIAGE_NO_LOG=1 para silenciar).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} nao e gravavel, regista em {fallback} (cria + chown {default} para usar o caminho padrao).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: nem {default} nem {fallback} sao gravaveis; os eventos nao serao registados.",
 }

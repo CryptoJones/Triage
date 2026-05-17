@@ -123,4 +123,20 @@ STRINGS: dict[str, str] = {
         "tilgængelige sprog (standard: {default}):",
     "unknown language: {lang}. known: {known}":
         "ukendt sprog: {lang}. kendte: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron-udtryk skal have 5 felter, fik {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "cyklus: fjernede kant {u} -> {v} (bagkant)",
+    "self-block: {id} blocks itself; ignored":
+        "selvblokering: {id} blokerer sig selv; ignoreret",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "los blokering: {id} blocked_by {blocker} (ukendt); ignoreret",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: logsti {path} kan ikke skrives; logning deaktiveret (sat TRIAGE_NO_LOG=1 for at dampe).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} kan ikke skrives, logger til {fallback} i stedet (opret + chown {default} for at bruge standardstien).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: hverken {default} eller {fallback} kan skrives; handelser logges ikke.",
 }

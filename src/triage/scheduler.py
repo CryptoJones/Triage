@@ -21,6 +21,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .i18n import _
 from .model import Signal, Task
 from .rules import DEFAULT_RULES, RuleContribution, RuleFn, score
 from .store import Store
@@ -52,7 +53,7 @@ def _break_cycles(blocks: dict[str, list[str]]) -> list[str]:
             cv = color.get(v, white)
             if cv == gray:
                 blocks[u] = [x for x in blocks[u] if x != v]
-                warnings.append(f"cycle: removed edge {u} -> {v} (back-edge)")
+                warnings.append(_("cycle: removed edge {u} -> {v} (back-edge)", u=u, v=v))
             elif cv == white:
                 dfs(v)
         color[u] = black
@@ -86,12 +87,13 @@ def propagate_blockers(scored: list[ScoredTask]) -> tuple[list[ScoredTask], list
     for s in scored:
         for blocker_id in s.task.blocked_by:
             if blocker_id == s.task.id:
-                warnings.append(f"self-block: {s.task.id} blocks itself; ignored")
+                warnings.append(_("self-block: {id} blocks itself; ignored", id=s.task.id))
                 continue
             if blocker_id not in by_id:
-                warnings.append(
-                    f"dangling blocker: {s.task.id} blocked_by {blocker_id} (unknown); ignored"
-                )
+                warnings.append(_(
+                    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored",
+                    id=s.task.id, blocker=blocker_id,
+                ))
                 continue
             blocks[blocker_id].append(s.task.id)
 

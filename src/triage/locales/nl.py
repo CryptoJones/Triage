@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "beschikbare talen (standaard: {default}):",
     "unknown language: {lang}. known: {known}":
         "onbekende taal: {lang}. bekend: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "cron-expressie moet 5 velden hebben, kreeg {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "cyclus: rand {u} -> {v} verwijderd (terugrand)",
+    "self-block: {id} blocks itself; ignored":
+        "zelfblokkering: {id} blokkeert zichzelf; genegeerd",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "loshangende blokkeerder: {id} blocked_by {blocker} (onbekend); genegeerd",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: logpad {path} is niet schrijfbaar; loggen uitgeschakeld (zet TRIAGE_NO_LOG=1 om te dempen).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} niet schrijfbaar, log nu naar {fallback} (maak + chown {default} aan om het standaardpad te gebruiken).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: noch {default} noch {fallback} is schrijfbaar; gebeurtenissen worden niet gelogd.",
 }

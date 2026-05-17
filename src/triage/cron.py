@@ -13,6 +13,8 @@ This is the v0.1 signal adapter; see DESIGN.md for the v0.2+ roadmap
 
 from __future__ import annotations
 
+from .i18n import _
+
 from datetime import datetime, timezone
 
 from .model import Signal, Task
@@ -45,7 +47,10 @@ def matches(expr: str, when: datetime) -> bool:
     """Return True if the five-field cron expression matches `when`."""
     parts = expr.split()
     if len(parts) != 5:
-        raise ValueError(f"cron expression must have 5 fields, got {len(parts)}: {expr!r}")
+        raise ValueError(_(
+            "cron expression must have 5 fields, got {got}: {expr}",
+            got=len(parts), expr=repr(expr),
+        ))
     minute_s, hour_s, dom_s, month_s, dow_s = parts
     minutes = _expand_field(minute_s, 0, 59)
     hours = _expand_field(hour_s, 0, 23)

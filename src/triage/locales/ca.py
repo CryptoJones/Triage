@@ -124,4 +124,20 @@ STRINGS: dict[str, str] = {
         "llengües disponibles (per defecte: {default}):",
     "unknown language: {lang}. known: {known}":
         "llengua desconeguda: {lang}. conegudes: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "l'expressio cron ha de tenir 5 camps, rebuts {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "cicle: aresta {u} -> {v} eliminada (aresta de retorn)",
+    "self-block: {id} blocks itself; ignored":
+        "auto-bloqueig: {id} es bloqueja a si mateix; ignorat",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "bloquejador penjant: {id} blocked_by {blocker} (desconegut); ignorat",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: el cami del registre {path} no es escrivible; registre desactivat (defineix TRIAGE_NO_LOG=1 per silenciar).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} no es escrivible, es registra en {fallback} (crea + chown {default} per usar el cami estandard).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: ni {default} ni {fallback} son escrivibles; els esdeveniments no es registraran.",
 }

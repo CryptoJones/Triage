@@ -125,4 +125,20 @@ STRINGS: dict[str, str] = {
         "verfügbare Sprachen (Standard: {default}):",
     "unknown language: {lang}. known: {known}":
         "unbekannte Sprache: {lang}. bekannt: {known}",
+
+    # ---- model-layer errors + warnings (L10) ----
+    "cron expression must have 5 fields, got {got}: {expr}":
+        "Cron-Ausdruck muss 5 Felder haben, erhalten {got}: {expr}",
+    "cycle: removed edge {u} -> {v} (back-edge)":
+        "Zyklus: Kante {u} -> {v} entfernt (Rueckkante)",
+    "self-block: {id} blocks itself; ignored":
+        "Selbstblockade: {id} blockiert sich selbst; ignoriert",
+    "dangling blocker: {id} blocked_by {blocker} (unknown); ignored":
+        "Haengender Blocker: {id} blocked_by {blocker} (unbekannt); ignoriert",
+    "triage: log path {path} is not writable; logging disabled (set TRIAGE_NO_LOG=1 to silence).":
+        "triage: Protokollpfad {path} ist nicht beschreibbar; Protokollierung deaktiviert (setze TRIAGE_NO_LOG=1 zum Stummschalten).",
+    "triage: {default} not writable, logging to {fallback} instead (create + chown {default} to use the standard path).":
+        "triage: {default} nicht beschreibbar, protokolliere stattdessen nach {fallback} (chown {default}, um den Standardpfad zu nutzen).",
+    "triage: neither {default} nor {fallback} is writable; events will not be logged.":
+        "triage: weder {default} noch {fallback} ist beschreibbar; Ereignisse werden nicht protokolliert.",
 }
