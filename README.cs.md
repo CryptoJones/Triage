@@ -29,7 +29,11 @@ pořadí a řekne ti přesně proč.
 [Português](README.pt.md) ·
 [Nederlands](README.nl.md) ·
 [Polski](README.pl.md) ·
-**Čeština**
+**Čeština** ·
+[Svenska](README.sv.md) ·
+[Norsk](README.no.md) ·
+[Dansk](README.da.md) ·
+[Suomi](README.fi.md)
 
 </div>
 

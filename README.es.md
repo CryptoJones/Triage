@@ -29,7 +29,11 @@ los objetivos — Triage decide el orden y te explica exactamente por qué.
 [Português](README.pt.md) ·
 [Nederlands](README.nl.md) ·
 [Polski](README.pl.md) ·
-[Čeština](README.cs.md)
+[Čeština](README.cs.md) ·
+[Svenska](README.sv.md) ·
+[Norsk](README.no.md) ·
+[Dansk](README.da.md) ·
+[Suomi](README.fi.md)
 
 </div>
 

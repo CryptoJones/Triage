@@ -29,7 +29,11 @@ Triage decide l'ordine e ti spiega esattamente perché.
 [Português](README.pt.md) ·
 [Nederlands](README.nl.md) ·
 [Polski](README.pl.md) ·
-[Čeština](README.cs.md)
+[Čeština](README.cs.md) ·
+[Svenska](README.sv.md) ·
+[Norsk](README.no.md) ·
+[Dansk](README.da.md) ·
+[Suomi](README.fi.md)
 
 </div>
 
