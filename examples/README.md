@@ -9,6 +9,7 @@ different combination of Triage's primitives.
 | [`release-train.sh`](release-train.sh)           | `--blocked-by` chains, transitive propagation   |
 | [`cron-tick`](cron-tick)            | Cron-scheduled `triage tick`; goes into `/etc/cron.d/`  |
 | [`runpodboss-bridge.sh`](runpodboss-bridge.sh)   | `triage signal manual` driven by an external watcher |
+| [`i18n-recipes.md`](i18n-recipes.md) | `--lang` flag, `TRIAGE_LANG`, `triage lang --check` release gate, `TRIAGE_I18N_DEBUG=1` |
 
 Run any of the shell examples directly — they're idempotent
 (re-running adds duplicate tasks, which `triage rm` can clean up).
